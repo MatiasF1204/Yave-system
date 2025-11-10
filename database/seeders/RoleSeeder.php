@@ -3,27 +3,19 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class RoleSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        // Crear roles, administrador
-        $adminRole = Role::create(['name' => 'Administrador']);
-        // Vendedor
-        $vendedorRole = Role::create(['name' => 'Vendedor']);
-
-        // Crea un usuario inicial
-        $admin = User::create([
-            'name' => 'Administrador del Sistema',
-            'email' => 'admin@yave.com',
-            'password' => Hash::make('admin!123'),
+        // Crea en la tala roles, los dos roles
+        DB::table('roles')->insert([
+            ['name' => 'Administrador', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Vendedor', 'created_at' => now(), 'updated_at' => now()],
         ]);
-
-        // Asignar rol de administrador al usuario inicial
-        $admin->assignRole($adminRole);
     }
 }
