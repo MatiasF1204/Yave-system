@@ -14,15 +14,26 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Obtener el ID del rol Administrador
+        // Obtener los roles existentes
         $adminRole = Role::where('name', 'Administrador')->first();
+        $sellerRole = Role::where('name', 'Vendedor')->first();
 
-        // Crear el usuario administrador inicial
+        // Crear el usuario administrador
         DB::table('users')->insert([
-            'name' => 'Administrador del Sistema',
+            'name' => 'Juan Perez',
             'email' => 'admin@yave.com',
             'password' => Hash::make('admin1234'),
             'role_id' => $adminRole->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Crear un usuario vendedor
+        DB::table('users')->insert([
+            'name' => 'María Gómez',
+            'email' => 'vendedor@yave.com',
+            'password' => Hash::make('vendedor1234'),
+            'role_id' => $sellerRole->id,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

@@ -12,7 +12,7 @@ class UserController extends Controller
     // Listado de usuarios
     public function index()
     {
-        $users = User::whereHas('role', function($q) {
+        $users = User::whereHas('role', function ($q) {
             $q->where('name', 'Vendedor');
         })->get();
 
@@ -29,9 +29,9 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => ['required','string','min:3','max:255'],
-            'email' => ['required','string','email','max:255','unique:users,email,'.$user->id],
-            'password' => ['nullable','string','min:8'],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'string', 'min:8'],
         ]);
 
         $user->name = $request->name;
@@ -46,11 +46,16 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente.');
     }
 
-    // Eliminar usuario
+    // Desactivar usuario (eliminación lógica)
     public function destroy(User $user)
     {
-        $user->delete();
+        // Cambiar el estado a 'inactive' en lugar de eliminarlo
+        $user->status = 'inactive';
+        $user->save();
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario desactivado correctamente.'
+        ]);
     }
 }
