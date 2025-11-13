@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,16 +23,19 @@
         body {
             background-color: #f3f4f6;
         }
+
         .sidebar {
             width: 250px;
             height: 100vh;
-            background-color: #1e293b; /* Azul oscuro */
+            background-color: #1e293b;
+            /* Azul oscuro */
             position: fixed;
             top: 0;
             left: 0;
             padding-top: 20px;
             color: #fff;
         }
+
         .sidebar a {
             display: block;
             padding: 10px 20px;
@@ -40,14 +44,18 @@
             border-radius: 6px;
             transition: background 0.2s ease;
         }
-        .sidebar a:hover, .sidebar a.active {
+
+        .sidebar a:hover,
+        .sidebar a.active {
             background-color: #334155;
             color: #fff;
         }
+
         .content {
             margin-left: 250px;
             padding: 2rem;
         }
+
         .topbar {
             background-color: white;
             border-bottom: 1px solid #e2e8f0;
@@ -88,5 +96,10 @@
 
     {{-- Bootstrap --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- Sweetalert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
+
 </html>

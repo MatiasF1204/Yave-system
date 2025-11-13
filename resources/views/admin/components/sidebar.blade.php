@@ -8,9 +8,10 @@
         <i class="bi bi-speedometer2 me-2"></i> Dashboard
     </a>
 
-    <a href="#">
-        <i class="bi bi-people me-2"></i> Usuarios
+    <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+        <i class="bi bi-people me-2"></i> Gestión de Usuarios
     </a>
+
 
     <a href="#">
         <i class="bi bi-bar-chart-line me-2"></i> Reportes
