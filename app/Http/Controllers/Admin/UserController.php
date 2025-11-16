@@ -46,16 +46,27 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente.');
     }
 
-    // Desactivar usuario (eliminación lógica)
-    public function destroy(User $user)
+    /**
+     * Desactivar usuario (lógica)
+     */
+    public function deactivate($id)
     {
-        // Cambiar el estado a 'inactive' en lugar de eliminarlo
-        $user->status = 'inactive';
-        $user->save();
+        $user = User::findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Usuario desactivado correctamente.'
-        ]);
+        $user->update(['status' => 'inactive']);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Activar usuario
+     */
+    public function activate($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->update(['status' => 'active']);
+
+        return response()->json(['success' => true]);
     }
 }

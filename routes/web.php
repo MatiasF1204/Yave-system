@@ -4,14 +4,15 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SellerController;
+use App\Http\Controllers\ClientController;
 use Illuminate\Support\Facades\Route;
 
-// Bienvenida
+// Página de bienvenida
 Route::get('/', function () {
     return view('welcome');
 });
 
-// 🔐 Redirección general al dashboard (veremos cómo dirigir según rol)
+// Redirección general según rol
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
@@ -25,31 +26,51 @@ Route::get('/dashboard', function () {
         return redirect()->route('seller.dashboard');
     }
 
-    // Por si no tiene rol definido
+    // Si no tiene rol definido
     return redirect()->route('login');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rutas para administrador
 
+// 🧭 Rutas para Administrador
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    
-    // Usuarios
+
+    // Gestión de usuarios
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::put('/users/{id}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
+    Route::put('/users/{id}/activate', [UserController::class, 'activate'])->name('users.activate');
+
 });
 
-// Rutas para vendedor
+
+// Rutas para Vendedor
+Route::middleware(['auth', 'verified'])->prefix('seller')->name('seller.')->group(function () {
+    Route::get('/dashboard', [SellerController::class, 'index'])->name('dashboard');
+});
+
+
+// Rutas compartidas entre Admin y Vendedor 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/seller/dashboard', [SellerController::class, 'index'])->name('seller.dashboard');
+
+    // Gestión de clientes
+    Route::get('/clients', [ClientController::class, 'index'])->name('client.index');
+    Route::get('/clients/create', [ClientController::class, 'create'])->name('client.create');
+    Route::post('/clients', [ClientController::class, 'store'])->name('client.store');
+    Route::get('/clients/{client}/edit', [ClientController::class, 'edit'])->name('client.edit');
+    Route::put('/clients/{client}', [ClientController::class, 'update'])->name('client.update');
+    Route::put('/clients/{client}/deactivate', [ClientController::class, 'deactivate'])->name('client.deactivate');
+    Route::put('/clients/{client}/activate', [ClientController::class, 'activate'])->name('client.activate');
 });
 
+
+// Perfil del usuario autenticado
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
