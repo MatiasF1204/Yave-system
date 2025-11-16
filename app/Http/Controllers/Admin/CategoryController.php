@@ -41,7 +41,7 @@ class CategoryController extends Controller
             'status' => 'active',
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Categoría registrada correctamente.');
+        return redirect()->route('admin.categories.index')->with('success', 'Categoría registrada correctamente.');
     }
 
     // Formulario editar categoría
@@ -59,7 +59,7 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('categories.index')->with('success', 'Categoría actualizada correctamente.');
+        return redirect()->route('admin.categories.index')->with('success', 'Categoría actualizada correctamente.');
     }
 
     // Desactivar categoría

@@ -17,5 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ClientSeeder::class);
         // Crea 5 categorías por defecto
         $this->call(CategorySeeder::class);
+        // Crea los 3 medios de pago
+        $this->call([PaymentMethodSeeder::class]);
     }
 }
