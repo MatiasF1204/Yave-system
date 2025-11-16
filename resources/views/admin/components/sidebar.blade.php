@@ -4,31 +4,53 @@
         <hr class="border-gray-600">
     </div>
 
-    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+    {{-- Dashboard --}}
+    <a href="{{ route('admin.dashboard') }}" 
+       class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+        <i class="bi bi-speedometer me-2"></i> Dashboard
     </a>
 
-    <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-        <i class="bi bi-people me-2"></i> Gestión de Usuarios
+    {{-- Usuarios --}}
+    <a href="{{ route('admin.users.index') }}" 
+       class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+        <i class="bi bi-people-fill me-2"></i> Gestión de Usuarios
     </a>
 
-    <a href=" {{ route('client.index') }} ">
-        <i class="bi bi-bar-chart-line me-2"></i> Gestión de Clientes
+    {{-- Clientes --}}
+    <a href="{{ route('client.index') }}" 
+       class="{{ request()->routeIs('client.*') ? 'active' : '' }}">
+        <i class="bi bi-person-vcard-fill me-2"></i> Gestión de Clientes
     </a>
 
-    <a href="  ">
-        <i class="bi bi-bar-chart-line me-2"></i> Categorías
+    {{-- Categorías --}}
+    <a href="{{ route('admin.categories.index') }}" 
+       class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+        <i class="bi bi-grid-fill me-2"></i> Gestión de Categorías
     </a>
 
+    {{-- Productos --}}
+    <a href="#" class="">
+        <i class="bi bi-box-seam-fill me-2"></i> Gestión de Productos
+    </a>
+
+    {{-- Medios de pago --}}
     <a href="#">
-        <i class="bi bi-bar-chart-line me-2"></i> Reportes
+        <i class="bi bi-credit-card-fill me-2"></i> Medios de Pago
     </a>
 
+    {{-- Ventas --}}
     <a href="#">
-        <i class="bi bi-box me-2"></i> Productos
+        <i class="bi bi-cash-stack me-2"></i> Gestión de Ventas
     </a>
 
-    <a href="{{ route('profile.edit') }}">
-        <i class="bi bi-person-circle me-2"></i> Perfil
+    {{-- Reportes --}}
+    <a href="#">
+        <i class="bi bi-graph-up-arrow me-2"></i> Reportes
+    </a>
+
+    {{-- Perfil --}}
+    <a href="{{ route('profile.edit') }}"
+       class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+        <i class="bi bi-person-circle me-2"></i> Mi Perfil
     </a>
 </div>

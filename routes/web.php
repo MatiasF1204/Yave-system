@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SellerController;
@@ -31,7 +32,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-// 🧭 Rutas para Administrador
+// Rutas para Administrador
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
@@ -43,6 +44,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::put('/users/{id}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
     Route::put('/users/{id}/activate', [UserController::class, 'activate'])->name('users.activate');
 
+    // Gestión de categorías
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::put('/categories/{category}/deactivate', [CategoryController::class, 'deactivate'])->name('categories.deactivate');
+    Route::put('/categories/{category}/activate', [CategoryController::class, 'activate'])->name('categories.activate');
 });
 
 
