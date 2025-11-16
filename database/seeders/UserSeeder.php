@@ -28,14 +28,34 @@ class UserSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // Crear un usuario vendedor
-        DB::table('users')->insert([
-            'name' => 'María Gómez',
-            'email' => 'vendedor@yave.com',
-            'password' => Hash::make('vendedor1234'),
-            'role_id' => $sellerRole->id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // Crear 3 usuarios vendedores
+        $sellers = [
+            [
+                'name' => 'María Gómez',
+                'email' => 'vendedor@yave.com',
+                'password' => 'vendedor1234',
+            ],
+            [
+                'name' => 'Lucas Fernández',
+                'email' => 'vendedor2@yave.com',
+                'password' => 'vendedor1234',
+            ],
+            [
+                'name' => 'Sofía Martínez',
+                'email' => 'vendedor3@yave.com',
+                'password' => 'vendedor1234',
+            ],
+        ];
+
+        foreach ($sellers as $seller) {
+            DB::table('users')->insert([
+                'name' => $seller['name'],
+                'email' => $seller['email'],
+                'password' => Hash::make($seller['password']),
+                'role_id' => $sellerRole->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

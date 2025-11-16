@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         // Crea el usuario admin y un vendedor por defecto
         $this->call(UserSeeder::class);
+        // Crea 5 clientes por defecto
+        $this->call(ClientSeeder::class);
         // Crea 5 categorías por defecto
         $this->call(CategorySeeder::class);
     }

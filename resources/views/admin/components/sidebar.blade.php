@@ -16,6 +16,10 @@
         <i class="bi bi-bar-chart-line me-2"></i> Gestión de Clientes
     </a>
 
+    <a href="  ">
+        <i class="bi bi-bar-chart-line me-2"></i> Categorías
+    </a>
+
     <a href="#">
         <i class="bi bi-bar-chart-line me-2"></i> Reportes
     </a>

@@ -7,17 +7,21 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    // Mostrar listado de clientes
-    public function index()
+    // Mostrar listado de clientes y barra de búsqueda
+    public function index(Request $request)
     {
-        if (auth()->user()->role->name === 'Administrador') {
-            $clients = Client::all();
-        } else {
-            $clients = Client::active()->get();
+        $query = Client::query();
+
+        // Búsqueda por DNI
+        if ($request->filled('search')) {
+            $query->where('dni', 'LIKE', '%' . $request->search . '%');
         }
+
+        $clients = $query->get();
 
         return view('client.index', compact('clients'));
     }
+
 
     public function create()
     {
@@ -27,7 +31,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'full_name' => 'required|string|max:150',
+            'full_name' => 'required|string|min:5|max:150',
             'dni' => 'required|string|regex:/^[0-9]+$/|unique:clients,dni',
             'phone' => 'required|unique:clients,phone',
         ]);
