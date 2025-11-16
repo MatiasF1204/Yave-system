@@ -11,7 +11,9 @@ class DatabaseSeeder extends Seeder
     {
         // Ejecuta el RoleSeeder que crea los tipos de roles
         $this->call(RoleSeeder::class);
-        // Ejecuta el UserSeeder que crea el usuario admin por defecto
+        // Crea el usuario admin y un vendedor por defecto
         $this->call(UserSeeder::class);
+        // Crea 5 categorías por defecto
+        $this->call(CategorySeeder::class);
     }
 }
