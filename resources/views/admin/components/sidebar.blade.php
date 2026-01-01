@@ -34,7 +34,8 @@
     </a>
 
     {{-- Medios de pago --}}
-    <a href="#">
+    <a href="{{ route('admin.payment_methods.index') }}" 
+       class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
         <i class="bi bi-credit-card-fill me-2"></i> Medios de Pago
     </a>
 
