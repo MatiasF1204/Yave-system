@@ -19,13 +19,13 @@ class ClientController extends Controller
 
         $clients = $query->get();
 
-        return view('client.index', compact('clients'));
+        return view('clients.index', compact('clients'));
     }
 
 
     public function create()
     {
-        return view('client.create');
+        return view('clients.create');
     }
 
     public function store(Request $request)
@@ -49,7 +49,7 @@ class ClientController extends Controller
             abort(403, 'No tienes permiso para editar clientes.');
         }
 
-        return view('client.edit', compact('client'));
+        return view('clients.edit', compact('client'));
     }
 
     // Actualizar cliente
@@ -67,7 +67,7 @@ class ClientController extends Controller
 
         $client->update($validated);
 
-        return redirect()->route('client.index')->with('success', 'Cliente actualizado correctamente.');
+        return redirect()->route('clients.index')->with('success', 'Cliente actualizado correctamente.');
     }
 
     // Desactivar cliente

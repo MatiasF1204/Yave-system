@@ -4,13 +4,13 @@
     <div class="p-6 bg-white rounded-lg shadow">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-2xl font-bold">Clientes</h2>
-            <a href="{{ route('client.create') }}" class="btn btn-primary">
+            <a href="{{ route('clients.create') }}" class="btn btn-primary">
                 <i class="bi bi-person-plus"></i> Registrar cliente
             </a>
         </div>
 
         <div class="mb-4">
-            <form action="{{ route('client.index') }}" method="GET" class="w-100">
+            <form action="{{ route('clients.index') }}" method="GET" class="w-100">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Buscar por DNI..."
                         value="{{ request('search') }}">
@@ -55,7 +55,7 @@
 
                             @if (auth()->user()->role->name === 'Administrador')
                                 <td>
-                                    <a href="{{ route('client.edit', $client->client_id) }}"
+                                    <a href="{{ route('clients.edit', $client->client_id) }}"
                                         class="btn btn-sm btn-warning">Editar</a>
                                     @if ($client->status === 'active')
                                         <button onclick="deactivateClient({{ $client->client_id }})"

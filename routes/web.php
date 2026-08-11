@@ -93,15 +93,15 @@ Route::middleware(['auth', 'verified'])
     ->group(function () {
 
         // Gestión de Clientes
-        Route::get('/clients', [ClientController::class, 'index'])->name('client.index');
-        Route::get('/clients/create', [ClientController::class, 'create'])->name('client.create');
-        Route::post('/clients', [ClientController::class, 'store'])->name('client.store');
+        Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+        Route::get('/clients/create', [ClientController::class, 'create'])->name('clients.create');
+        Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 
-        Route::get('/clients/{client}/edit', [ClientController::class, 'edit'])->name('client.edit');
-        Route::put('/clients/{client}', [ClientController::class, 'update'])->name('client.update');
+        Route::get('/clients/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+        Route::put('/clients/{client}', [ClientController::class, 'update'])->name('clients.update');
 
-        Route::put('/clients/{client}/deactivate', [ClientController::class, 'deactivate'])->name('client.deactivate');
-        Route::put('/clients/{client}/activate', [ClientController::class, 'activate'])->name('client.activate');
+        Route::put('/clients/{client}/deactivate', [ClientController::class, 'deactivate'])->name('clients.deactivate');
+        Route::put('/clients/{client}/activate', [ClientController::class, 'activate'])->name('clients.activate');
     });
 
 

@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ESTILOS DEL MENU LATERAL (AMBOS ROLES) */
+body {
+    background-color: #eff0f3;
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #071e2f; /* Azul más oscuro que el seller */
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    color: #fff;
+}
+.sidebar a {
+    display: block;
+    padding: 10px 20px;
+    color: #cbd5e1;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: rgb(46, 59, 76);
+    color: #fff;
+}
+.content {
+    margin-left: 250px;
+    padding: 2rem;
+}
+.topbar {
+    background-color: white;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}

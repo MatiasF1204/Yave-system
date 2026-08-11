@@ -1,0 +1,240 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    background: linear-gradient(
+        135deg,
+        #72b3db 0%,
+        #abc6ce 40%,
+        #cfe3ea 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* CONTENEDOR */
+.container {
+    background-color: #ffffff;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+    width: 70%;
+    max-width: 100%;
+    min-height: 600px;
+    animation: fadeUp 0.8s ease;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* FORM */
+.form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign-in {
+    left: 0;
+}
+
+/* FORM CONTENT */
+.container form {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 60px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    color: #437180;
+}
+
+.brand i {
+    font-size: 28px;
+}
+
+.brand span {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.container h1 {
+    font-size: 28px;
+    color: #151515;
+    margin-bottom: 20px;
+}
+
+/* INPUTS */
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-group i {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #68a3b5;
+    font-size: 14px;
+}
+
+.container input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    font-size: 13px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background-color: #f3f6f7;
+    transition: all 0.25s ease;
+}
+
+.container input:focus {
+    outline: none;
+    border-color: #68a3b5;
+    box-shadow: 0 0 0 3px rgba(104, 163, 181, 0.25);
+    background-color: #ffffff;
+}
+
+/* LINKS */
+.forgot {
+    font-size: 13px;
+    margin: 15px 0 20px;
+    color: #6b7c85;
+}
+
+.forgot a {
+    color: #437180;
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+}
+
+.forgot a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    background-color: #68a3b5;
+    transition: width 0.3s ease;
+}
+
+.forgot a:hover::after {
+    width: 100%;
+}
+
+/* BUTTON */
+.container button {
+    background: linear-gradient(
+        135deg,
+        #68a3b5,
+        #437180
+    );
+    color: #ffffff;
+    font-size: 12px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(67, 113, 128, 0.35);
+}
+
+.container button:active {
+    transform: scale(0.97);
+}
+
+/* PANEL DERECHO */
+.toggle-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 150px 0 0 100px;
+}
+
+.toggle {
+    background: linear-gradient(
+        135deg,
+        #68a3b5,
+        #437180
+    );
+    color: #ffffff;
+    height: 100%;
+    width: 100%;
+}
+
+.toggle-panel {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 60px;
+    text-align: center;
+}
+
+/* LOGO */
+.logo {
+    width: 280px;
+    max-width: 80%;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+}
+
+.toggle-panel h1 {
+    color: white;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.toggle-panel p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.panel-icon {
+    font-size: 70px;
+    margin-bottom: 25px;
+    opacity: 0.25;
+}

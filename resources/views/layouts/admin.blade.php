@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,48 +19,6 @@
     <!-- Tailwind / Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <style>
-        body {
-            background-color: #f3f4f6;
-        }
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background-color: #0f172a; /* Azul más oscuro que el seller */
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 20px;
-            color: #fff;
-        }
-        .sidebar a {
-            display: block;
-            padding: 10px 20px;
-            color: #cbd5e1;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: background 0.2s ease;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background-color: #1e293b;
-            color: #fff;
-        }
-        .content {
-            margin-left: 250px;
-            padding: 2rem;
-        }
-        .topbar {
-            background-color: white;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.8rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-    </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -72,10 +31,12 @@
         <div class="topbar">
             <h1 class="text-xl font-semibold text-gray-700">Panel de Administrador</h1>
             <div class="d-flex align-items-center gap-3">
-                <span class="text-gray-600">👑 {{ Auth::user()->name }}</span>
-                <form method="POST" action="{{ route('logout') }}">
+                <span class="text-gray-600">¡Bienvenido, {{ Auth::user()->name }}!</span>
+                <form id="logoutForm" method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Salir</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmLogout()">
+                        Salir
+                    </button>
                 </form>
             </div>
         </div>
@@ -91,5 +52,26 @@
 
     {{-- Sweetalert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- Alerta que valida la salida de sesión --}}
+    <script>
+        function confirmLogout() {
+            Swal.fire({
+                title: '¿Cerrar sesión?',
+                text: 'Se cerrará tu sesión actual.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, salir',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+        }
+    </script>
 </body>
+
 </html>

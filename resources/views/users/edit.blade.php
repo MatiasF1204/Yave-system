@@ -4,10 +4,11 @@
     <div class="p-6 bg-white rounded-lg shadow max-w-lg">
         <h2 class="text-2xl font-bold mb-4">Editar Usuario</h2>
 
-        <form action="{{ route('admin.users.update', $user) }}" method="POST">
+        <form action="{{ route('admin.users.update', $user) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
+            {{-- Nombre --}}
             <div class="mb-3">
                 <label class="form-label">Nombre</label>
                 <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}">
@@ -16,6 +17,7 @@
                 @enderror
             </div>
 
+            {{-- Email --}}
             <div class="mb-3">
                 <label class="form-label">Email</label>
                 <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}">
@@ -24,13 +26,14 @@
                 @enderror
             </div>
 
+            {{-- Contraseña --}}
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" name="password" id="password" class="form-control"
                     placeholder="Dejar en blanco si no desea cambiarla">
             </div>
 
-
+            {{-- Botón --}}
             <button type="submit" class="btn btn-success">Guardar Cambios</button>
             <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Cancelar</a>
         </form>

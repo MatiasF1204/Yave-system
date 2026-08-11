@@ -17,8 +17,8 @@
     </a>
 
     {{-- Clientes --}}
-    <a href="{{ route('client.index') }}" 
-       class="{{ request()->routeIs('client.*') ? 'active' : '' }}">
+    <a href="{{ route('clients.index') }}" 
+       class="{{ request()->routeIs('clients.*') ? 'active' : '' }}">
         <i class="bi bi-person-vcard-fill me-2"></i> Gestión de Clientes
     </a>
 

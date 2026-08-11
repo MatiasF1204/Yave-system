@@ -9,16 +9,12 @@ use App\Models\Role;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Obtener los roles existentes
         $adminRole = Role::where('name', 'Administrador')->first();
         $sellerRole = Role::where('name', 'Vendedor')->first();
 
-        // Crear el usuario administrador
+        // Usuario administrador
         DB::table('users')->insert([
             'name' => 'Juan Perez',
             'email' => 'admin@yave.com',
@@ -28,7 +24,7 @@ class UserSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // Crear 3 usuarios vendedores
+        // Crea un array de usuarios vendedores
         $sellers = [
             [
                 'name' => 'María Gómez',
@@ -47,6 +43,7 @@ class UserSeeder extends Seeder
             ],
         ];
 
+        // Los inserta en la BD
         foreach ($sellers as $seller) {
             DB::table('users')->insert([
                 'name' => $seller['name'],

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserController extends Controller
 {
@@ -16,13 +18,13 @@ class UserController extends Controller
             $q->where('name', 'Vendedor');
         })->get();
 
-        return view('admin.users.index', compact('users'));
+        return view('users.index', compact('users'));
     }
 
     // Formulario para editar usuario
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        return view('users.edit', compact('user'));
     }
 
     // Actualizar usuario
@@ -43,8 +45,11 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente.');
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'Usuario actualizado correctamente.');
     }
+
 
     /**
      * Desactivar usuario (lógica)
