@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    // Mostrar listado de clientes y barra de búsqueda
+    // Mostrar listado de clientes y barra de búsqueda y navegacion
     public function index(Request $request)
     {
         $query = Client::query();
@@ -17,7 +17,7 @@ class ClientController extends Controller
             $query->where('dni', 'LIKE', '%' . $request->search . '%');
         }
 
-        $clients = $query->get();
+        $clients = $query->paginate(10)->withQueryString();
 
         return view('clients.index', compact('clients'));
     }

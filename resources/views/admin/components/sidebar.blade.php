@@ -33,7 +33,7 @@
 
     {{-- Categorías --}}
     <a href="{{ route('admin.categories.index') }}" 
-       class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+       class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
         <i class="bi bi-grid-fill me-2"></i> Gestión de Categorías
     </a>
 
@@ -44,7 +44,7 @@
 
     {{-- Medios de pago --}}
     <a href="{{ route('admin.payment_methods.index') }}" 
-       class="{{ request()->routeIs('payment_methods.*') ? 'active' : '' }}">
+       class="{{ request()->routeIs('admin.payment_methods.*') ? 'active' : '' }}">
         <i class="bi bi-credit-card-fill me-2"></i> Medios de Pago
     </a>
 
