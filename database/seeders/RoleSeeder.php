@@ -12,7 +12,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        // Crea en la tala roles, los dos roles
+        // Crea en la tabla los 2 roles
         DB::table('roles')->insert([
             ['name' => 'Administrador', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Vendedor', 'created_at' => now(), 'updated_at' => now()],
