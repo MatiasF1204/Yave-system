@@ -14,6 +14,12 @@ class Category extends Model
         'status',
     ];
 
+    // Relación: una categoría puede tener muchos productos
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_category');
+    }
+
     // Scope para filtrar activos
     public function scopeActive($query)
     {
@@ -26,4 +32,3 @@ class Category extends Model
         $this->update(['status' => 'inactive']);
     }
 }
-
