@@ -32,13 +32,57 @@ class ClientController extends Controller
     {
         $validated = $request->validate([
             'full_name' => 'required|string|min:5|max:150',
-            'dni' => 'required|string|regex:/^[0-9]+$/|unique:clients,dni',
-            'phone' => 'required|unique:clients,phone',
+            'dni' => 'required|string|regex:/^[0-9]+$/',
+            'phone' => 'required|string',
+        ], [
+            'full_name.required' => 'El nombre completo es obligatorio.',
+            'full_name.min' => 'El nombre debe tener al menos 5 caracteres.',
+            'dni.required' => 'El DNI es obligatorio.',
+            'dni.regex' => 'El DNI solo puede contener números.',
+            'phone.required' => 'El teléfono es obligatorio.',
         ]);
 
-        Client::create($validated);
+        // Buscar si el cliente ya existe por DNI
+        $existingClient = Client::where('dni', $validated['dni'])->first();
 
-        return redirect()->route('clients.index')->with('success', 'Cliente registrado correctamente.');
+        // Si existe
+        if ($existingClient) {
+
+            // Si ya está activo, no permitimos duplicarlo
+            if ($existingClient->status === 'active') {
+                return back()
+                    ->withErrors([
+                        'dni' => 'Ya existe un cliente activo registrado con ese DNI.'
+                    ])
+                    ->withInput();
+            }
+
+            // Si estaba inactivo, lo reactivamos
+            $existingClient->update([
+                'full_name' => $validated['full_name'],
+                'phone' => $validated['phone'],
+                'status' => 'active',
+            ]);
+
+            return redirect()
+                ->route('clients.index')
+                ->with(
+                    'success',
+                    'El cliente ya había sido registrado anteriormente. Se reactivó correctamente y se conservó todo su historial.'
+                );
+        }
+
+        // Si nunca existió, creamos un cliente nuevo
+        Client::create([
+            'full_name' => $validated['full_name'],
+            'dni' => $validated['dni'],
+            'phone' => $validated['phone'],
+            'status' => 'active',
+        ]);
+
+        return redirect()
+            ->route('clients.index')
+            ->with('success', 'Cliente registrado correctamente.');
     }
 
 

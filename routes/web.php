@@ -58,6 +58,7 @@ Route::middleware(['auth', 'verified'])
         Route::put('/users/{id}/activate', [UserController::class, 'activate'])
             ->name('users.activate');
 
+            
         // Gestión de Categorías
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
         Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');

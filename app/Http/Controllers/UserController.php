@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -19,25 +19,57 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        // Primero validamos los datos básicos
         $validated = $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
             'name.required' => 'El nombre es obligatorio.',
             'name.min' => 'El nombre debe tener al menos 3 caracteres.',
             'email.required' => 'El email es obligatorio.',
             'email.email' => 'Ingrese un email válido.',
-            'email.unique' => 'Ya existe un usuario registrado con ese email.',
             'password.required' => 'La contraseña es obligatoria.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
         ]);
 
+        // Buscamos si ya existe un usuario con ese email
+        $existingUser = User::where('email', $validated['email'])->first();
+
+        // Si existe...
+        if ($existingUser) {
+
+            // Si ya está activo, no permitimos duplicarlo
+            if ($existingUser->status === 'active') {
+                return back()
+                    ->withErrors([
+                        'email' => 'Ya existe un usuario activo registrado con ese email.'
+                    ])
+                    ->withInput();
+            }
+
+            // Si estaba inactivo, lo reactivamos
+            $existingUser->update([
+                'name' => $validated['name'],
+                'password' => Hash::make($validated['password']),
+                'role_id' => 2,
+                'status' => 'active',
+            ]);
+
+            return redirect()
+                ->route('admin.users.index')
+                ->with(
+                    'success',
+                    'El usuario ya había sido registrado anteriormente. Se reactivó correctamente y se conservó todo su historial.'
+                );
+        }
+
+        // Si nunca existió, creamos uno nuevo
         User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => $validated['password'],
+            'password' => Hash::make($validated['password']),
             'role_id' => 2,
             'status' => 'active',
         ]);
@@ -46,6 +78,7 @@ class UserController extends Controller
             ->route('admin.users.index')
             ->with('success', 'Usuario creado correctamente.');
     }
+
     // Listado de usuarios
     public function index()
     {

@@ -9,6 +9,10 @@
             </a>
         </div>
 
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
         {{-- Barra de búsqueda --}}
         <div class="mb-4">
             <form action="{{ route('admin.categories.index') }}" method="GET" class="w-100">
@@ -53,16 +57,16 @@
 
                             @if (auth()->user()->role->name === 'Administrador')
                                 <td>
+                                    @if ($category->status === 'active')
                                     <a href="{{ route('admin.categories.edit', $category->id) }}"
                                         class="btn btn-sm btn-warning">
                                         Editar
                                     </a>
 
-                                    @if ($category->status === 'active')
-                                        <button class="btn btn-sm btn-danger"
-                                            onclick="deactivateCategory({{ $category->id }})">
-                                            Desactivar
-                                        </button>
+                                    <button class="btn btn-sm btn-danger"
+                                        onclick="deactivateCategory({{ $category->id }})">
+                                        Desactivar
+                                    </button>
                                     @else
                                         <button class="btn btn-sm btn-success"
                                             onclick="activateCategory({{ $category->id }})">
@@ -90,6 +94,7 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
+                cancelButtonText: "Cancelar",
                 confirmButtonText: "Sí, desactivar"
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -117,7 +122,8 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, activar"
+                confirmButtonText: "Sí, activar",
+                cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(`/admin/categories/${id}/activate`, {

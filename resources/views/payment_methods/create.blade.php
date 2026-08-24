@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="p-6 bg-white rounded-lg shadow max-w-lg mx-auto">
+<div class="p-6 bg-white rounded-lg shadow mx-auto">
     <h2 class="text-2xl font-bold mb-4">Registrar método de pago</h2>
 
     <form action="{{ route('admin.payment_methods.store') }}" method="POST">

@@ -24,13 +24,13 @@ class CategoryController extends Controller
         $categories = $query->get();
 
         // Retornamos vista y pasamos el resultado de la query
-        return view('admin.categories.index', compact('categories'));
+        return view('categories.index', compact('categories'));
     }
 
     // Vista para crear
     public function create()
     {
-        return view('admin.categories.create');
+        return view('categories.create');
     }
 
     // Registrar categoría
@@ -38,25 +38,57 @@ class CategoryController extends Controller
     {
         // Validar formulario
         $validated = $request->validate([
-            'name' => 'required|string|min:3|max:150|unique:categories,name',
+            'name' => 'required|string|min:3|max:150',
+        ], [
+            'name.required' => 'El nombre de la categoría es obligatorio.',
+            'name.min' => 'El nombre debe tener al menos 3 caracteres.',
+            'name.max' => 'El nombre no puede superar los 150 caracteres.',
         ]);
 
-        // Crear categoría registrada
+        // Buscar si la categoría ya existe
+        $existingCategory = Category::where('name', $validated['name'])->first();
+
+        // Si existe...
+        if ($existingCategory) {
+
+            // Si ya está activa, no permitimos duplicarla
+            if ($existingCategory->status === 'active') {
+                return back()
+                    ->withErrors([
+                        'name' => 'Ya existe una categoría activa con ese nombre.'
+                    ])
+                    ->withInput();
+            }
+
+            // Si estaba inactiva, la reactivamos
+            $existingCategory->update([
+                'status' => 'active',
+            ]);
+
+            return redirect()
+                ->route('admin.categories.index')
+                ->with(
+                    'success',
+                    'La categoría ya había sido registrada anteriormente. Se reactivó correctamente y se conservó todo su historial.'
+                );
+        }
+
+        // Si nunca existió, creamos una categoría nueva
         Category::create([
-            // Le asignamos el nombre validado y el status activo
-            'name' => $validated['name'], 
+            'name' => $validated['name'],
             'status' => 'active',
         ]);
 
-        // Redirigimos a la vista con mensaje de éxito
-        return redirect()->route('admin.categories.index')->with('success', 'Categoría registrada correctamente.');
+        return redirect()
+            ->route('admin.categories.index')
+            ->with('success', 'Categoría registrada correctamente.');
     }
-
+    
     // Formulario editar categoría
     public function edit(Category $category)
     {
         // Retorna vista con la categoría a editar
-        return view('admin.categories.edit', compact('category'));
+        return view('categories.edit', compact('category'));
     }
 
     // Actualizar categoría

@@ -1,8 +1,17 @@
 <div class="sidebar">
-    <div class="px-4 mb-4">
-        <h2 class="text-xl font-bold text-white mb-2">⚙️ Admin YAVÉ</h2>
-        <hr class="border-gray-600">
+<div class="px-4 mb-4">
+    <div class="flex items-center gap-3 mb-2">
+        <img src="{{ asset('images/logo-blanco.png') }}" 
+             alt="Logo Productos YAVÉ"
+             class="w-12 h-12 object-contain">
+
+        <h2 class="text-xl font-bold text-white">
+            Productos YAVÉ
+        </h2>
     </div>
+
+    <hr class="border-gray-600">
+</div>
 
     {{-- Dashboard --}}
     <a href="{{ route('admin.dashboard') }}" 
@@ -35,7 +44,7 @@
 
     {{-- Medios de pago --}}
     <a href="{{ route('admin.payment_methods.index') }}" 
-       class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+       class="{{ request()->routeIs('payment_methods.*') ? 'active' : '' }}">
         <i class="bi bi-credit-card-fill me-2"></i> Medios de Pago
     </a>
 

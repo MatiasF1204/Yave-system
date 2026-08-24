@@ -9,6 +9,10 @@
             </a>
         </div>
 
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
         <div class="mb-4">
             <form action="{{ route('clients.index') }}" method="GET" class="w-100">
                 <div class="input-group">
