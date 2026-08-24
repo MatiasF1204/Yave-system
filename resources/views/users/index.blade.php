@@ -2,7 +2,12 @@
 
 @section('content')
     <div class="p-6 bg-white rounded-lg shadow">
-        <h2 class="text-2xl font-bold mb-4">Usuarios</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl font-bold">Usuarios</h2>
+            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                <i class="bi bi-person-plus"></i> Registrar usuario
+            </a>
+        </div>
 
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
@@ -22,8 +27,6 @@
             <tbody>
                 @foreach ($users as $user)
                     <tr id="user-{{ $user->id }}">
-
-
                         <td>
                             {{ $user->name }}
                         </td>

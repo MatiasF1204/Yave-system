@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="p-6 bg-white rounded-lg shadow max-w-lg mx-auto">
+<div class="p-6 bg-white rounded-lg shadow  mx-auto">
     <h2 class="text-2xl font-bold mb-4">Registrar nuevo cliente</h2>
 
-    <form action="{{ route('client.store') }}" method="POST">
+    <form action="{{ route('clients.store') }}" method="POST">
         @csrf
 
         <div class="mb-3">
@@ -26,7 +26,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">Registrar</button>
-        <a href="{{ route('client.index') }}" class="btn btn-secondary">Cancelar</a>
+        <a href="{{ route('clients.index') }}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 @endsection

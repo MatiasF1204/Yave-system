@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="p-6 bg-white rounded-lg shadow max-w-lg">
+    <div class="p-6 bg-white rounded-lg shadow">
         <h2 class="text-2xl font-bold mb-4">Editar Usuario</h2>
 
         <form action="{{ route('admin.users.update', $user) }}" method="POST" enctype="multipart/form-data">
@@ -32,6 +32,13 @@
                 <input type="password" name="password" id="password" class="form-control"
                     placeholder="Dejar en blanco si no desea cambiarla">
             </div>
+
+            {{-- Mensaje de validación en caso de que la contraseña se edite por la misma --}}
+            @error('password')
+                <div class="text-danger mb-2">
+                    {{ $message }}
+                </div>
+            @enderror
 
             {{-- Botón --}}
             <button type="submit" class="btn btn-success">Guardar Cambios</button>

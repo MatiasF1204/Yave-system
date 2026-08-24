@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="p-6 bg-white rounded-lg shadow max-w-lg">
+<div class="p-6 bg-white rounded-lg shadow">
     <h2 class="text-2xl font-bold mb-4">Editar Cliente</h2>
 
-    <form action="{{ route('client.update', $client->client_id) }}" method="POST">
+    <form action="{{ route('clients.update', $client->id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -27,7 +27,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">Guardar Cambios</button>
-        <a href="{{ route('client.index') }}" class="btn btn-secondary">Cancelar</a>
+        <a href="{{ route('clients.index') }}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 @endsection

@@ -38,7 +38,7 @@ class ClientController extends Controller
 
         Client::create($validated);
 
-        return redirect()->route('client.index')->with('success', 'Cliente registrado correctamente.');
+        return redirect()->route('clients.index')->with('success', 'Cliente registrado correctamente.');
     }
 
 
@@ -61,8 +61,8 @@ class ClientController extends Controller
 
         $validated = $request->validate([
             'full_name' => 'required|string|min:5|max:150',
-            'dni' => 'required|integer|unique:clients,dni,' . $client->client_id . ',client_id',
-            'phone' => 'required|string|unique:clients,phone,' . $client->client_id . ',client_id',
+            'dni' => 'required|integer|unique:clients,dni,' . $client->id . ',id',
+            'phone' => 'required|string|unique:clients,phone,' . $client->id . ',id',
         ]);
 
         $client->update($validated);

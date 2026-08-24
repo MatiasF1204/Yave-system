@@ -11,6 +11,41 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    // Crea un usuario
+    public function create()
+    {
+        return view('users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.min' => 'El nombre debe tener al menos 3 caracteres.',
+            'email.required' => 'El email es obligatorio.',
+            'email.email' => 'Ingrese un email válido.',
+            'email.unique' => 'Ya existe un usuario registrado con ese email.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+        ]);
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+            'role_id' => 2,
+            'status' => 'active',
+        ]);
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'Usuario creado correctamente.');
+    }
     // Listado de usuarios
     public function index()
     {
@@ -32,14 +67,32 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users,email,' . $user->id
+            ],
             'password' => ['nullable', 'string', 'min:8'],
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
 
+        // Si ingresó una nueva contraseña
         if ($request->filled('password')) {
+
+            // Comprobar que no sea la misma contraseña actual
+            if (Hash::check($request->password, $user->password)) {
+                return back()
+                    ->withErrors([
+                        'password' => 'La nueva contraseña debe ser diferente de la contraseña actual.'
+                    ])
+                    ->withInput();
+            }
+
+            // Guardar la nueva contraseña
             $user->password = Hash::make($request->password);
         }
 

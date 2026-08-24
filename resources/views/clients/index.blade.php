@@ -55,15 +55,17 @@
 
                             @if (auth()->user()->role->name === 'Administrador')
                                 <td>
-                                    <a href="{{ route('clients.edit', $client->client_id) }}"
-                                        class="btn btn-sm btn-warning">Editar</a>
                                     @if ($client->status === 'active')
-                                        <button onclick="deactivateClient({{ $client->client_id }})"
-                                            class="btn btn-sm btn-danger">
-                                            Desactivar
-                                        </button>
+                                    <a href="{{ route('clients.edit', $client->id) }}"
+                                        class="btn btn-sm btn-warning">Editar
+                                    </a>
+
+                                    <button onclick="deactivateClient({{ $client->id }})"
+                                        class="btn btn-sm btn-danger">
+                                        Desactivar
+                                    </button>
                                     @else
-                                        <button onclick="activateClient({{ $client->client_id }})"
+                                        <button onclick="activateClient({{ $client->id }})"
                                             class="btn btn-sm btn-success">
                                             Activar
                                         </button>
@@ -102,9 +104,14 @@
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
-                                location.reload();
-                                Swal.fire("¡Actualizado!", "El cliente ha sido desactivado.", "success");
-                            }
+                                Swal.fire({
+                                    title: "¡Actualizado!",
+                                    text: "El cliente ha sido desactivado.",
+                                    icon: "success",
+                                    confirmButtonText: "Aceptar"
+                                }).then(() => {
+                                    location.reload();
+                                });                            }
                         });
                 }
             });
@@ -118,7 +125,8 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, activar"
+                confirmButtonText: "Sí, activar",
+                cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(`/clients/${id}/activate`, {
@@ -128,12 +136,33 @@
                                 'Accept': 'application/json',
                             }
                         })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                location.reload();
-                                Swal.fire("¡Actualizado!", "El cliente ha sido activado.", "success");
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error al activar el cliente.');
                             }
+
+                            return response.json();
+                        })
+                        .then(data => {
+
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "¡Actualizado!",
+                                    text: "El cliente ha sido activado.",
+                                    icon: "success",
+                                    confirmButtonText: "Aceptar"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            }
+
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                "Error",
+                                error.message,
+                                "error"
+                            );
                         });
                 }
             });
