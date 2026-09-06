@@ -11,19 +11,15 @@ class CategoryController extends Controller
     // Mostrar listado de categorías más búsqueda
     public function index(Request $request)
     {
-        // Se crea una consulta usando el modelo Category
-        $query = Category::query();
+        $query = Category::where('status', 'active');
 
-        // Buscador de categorías según nombre
-        if ($request->filled('search')) { // Valida que el request contenga el campo search y no esté vacío
-            // Busca todas las coincidencias en la columna name
+        // Búsqueda por nombre
+        if ($request->filled('search')) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
         }
 
-        // Ejecuta la consulta
         $categories = $query->get();
 
-        // Retornamos vista y pasamos el resultado de la query
         return view('categories.index', compact('categories'));
     }
 
@@ -83,7 +79,7 @@ class CategoryController extends Controller
             ->route('admin.categories.index')
             ->with('success', 'Categoría registrada correctamente.');
     }
-    
+
     // Formulario editar categoría
     public function edit(Category $category)
     {

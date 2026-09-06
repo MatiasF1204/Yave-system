@@ -2,179 +2,231 @@
 
 @section('content')
     <div class="p-6 bg-white rounded-lg shadow">
+
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl font-bold">Clientes</h2>
+
+            <h2 class="text-2xl font-bold">
+                Clientes
+            </h2>
+
             <a href="{{ route('clients.create') }}" class="btn btn-primary">
-                <i class="bi bi-person-plus"></i> Registrar cliente
+                <i class="bi bi-person-plus"></i>
+                Registrar cliente
             </a>
+
         </div>
 
+
+        {{-- Mensaje de éxito --}}
         @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
         @endif
 
+
+        {{-- Barra de búsqueda --}}
         <div class="mb-4">
+
             <form action="{{ route('clients.index') }}" method="GET" class="w-100">
+
                 <div class="input-group">
+
                     <input type="text" name="search" class="form-control" placeholder="Buscar por DNI..."
                         value="{{ request('search') }}">
+
                     <button class="btn btn-primary">
                         <i class="bi bi-search"></i>
                     </button>
+
                 </div>
+
             </form>
+
         </div>
 
-        <table class="table table-bordered">
+
+        {{-- Tabla --}}
+        <table class="table table-bordered align-middle">
+
             <thead>
                 <tr>
                     <th>Nombre completo</th>
                     <th>DNI</th>
                     <th>Teléfono</th>
-                    <th>Estado</th>
+
                     @if (auth()->user()->role->name === 'Administrador')
                         <th>Acciones</th>
                     @endif
                 </tr>
             </thead>
+
+
             <tbody>
-                @if (request('search') && $clients->isEmpty())
-                    <tr>
-                        <td colspan="{{ auth()->user()->role->name === 'Administrador' ? 5 : 4 }}"
-                            class="text-center text-muted">
-                            No se encontraron clientes con ese DNI.
+
+                @forelse ($clients as $client)
+                    <tr id="client-{{ $client->id }}">
+
+                        <td>
+                            {{ $client->full_name }}
                         </td>
-                    </tr>
-                @else
-                    @foreach ($clients as $client)
-                        <tr>
-                            <td>{{ $client->full_name }}</td>
-                            <td>{{ $client->dni }}</td>
-                            <td>{{ $client->phone }}</td>
+
+                        <td>
+                            {{ $client->dni }}
+                        </td>
+
+                        <td>
+                            {{ $client->phone }}
+                        </td>
+
+
+                        @if (auth()->user()->role->name === 'Administrador')
                             <td>
-                                <span class="badge {{ $client->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ ucfirst($client->status) }}
-                                </span>
+
+                                {{-- Editar --}}
+                                <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil"></i>
+                                    Editar
+                                </a>
+
+
+                                {{-- Eliminar --}}
+                                <button onclick="deleteClient({{ $client->id }})" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                    Eliminar
+                                </button>
+
                             </td>
+                        @endif
 
-                            @if (auth()->user()->role->name === 'Administrador')
-                                <td>
-                                    @if ($client->status === 'active')
-                                    <a href="{{ route('clients.edit', $client->id) }}"
-                                        class="btn btn-sm btn-warning">Editar
-                                    </a>
+                    </tr>
 
-                                    <button onclick="deactivateClient({{ $client->id }})"
-                                        class="btn btn-sm btn-danger">
-                                        Desactivar
-                                    </button>
-                                    @else
-                                        <button onclick="activateClient({{ $client->id }})"
-                                            class="btn btn-sm btn-success">
-                                            Activar
-                                        </button>
-                                    @endif
-                                </td>
+                @empty
+
+                    <tr>
+
+                        <td colspan="{{ auth()->user()->role->name === 'Administrador' ? 4 : 3 }}"
+                            class="text-center text-muted">
+                            @if (request('search'))
+                                No se encontraron clientes activos con ese DNI.
+                            @else
+                                No hay clientes registrados.
                             @endif
-                        </tr>
-                    @endforeach
-                @endif
+                        </td>
+
+                    </tr>
+                @endforelse
+
             </tbody>
 
         </table>
 
+
         {{-- Paginación --}}
         <div class="d-flex justify-content-center mt-4">
+
             {{ $clients->links() }}
+
         </div>
+
     </div>
+
 
     {{-- SweetAlert2 --}}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        function deactivateClient(id) {
-            Swal.fire({
-                title: "¿Desactivar cliente?",
-                text: "El cliente pasará a estado inactivo.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, desactivar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/clients/${id}/deactivate`, {
-                            method: 'PUT',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                            }
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    title: "¡Actualizado!",
-                                    text: "El cliente ha sido desactivado.",
-                                    icon: "success",
-                                    confirmButtonText: "Aceptar"
-                                }).then(() => {
-                                    location.reload();
-                                });                            }
-                        });
-                }
-            });
-        }
 
-        function activateClient(id) {
+
+    <script>
+        // ==========================================
+        // ELIMINAR CLIENTE
+        // ==========================================
+
+        function deleteClient(id) {
+
             Swal.fire({
-                title: "¿Activar cliente?",
-                text: "El cliente pasará a estado activo.",
-                icon: "info",
+
+                title: "¿Eliminar cliente?",
+
+                text: "Sus datos e historial se conservarán.",
+
+                icon: "warning",
+
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, activar",
+
+                confirmButtonColor: "#d33",
+
+                cancelButtonColor: "#6c757d",
+
+                confirmButtonText: "Sí, eliminar",
+
                 cancelButtonText: "Cancelar"
+
             }).then((result) => {
+
                 if (result.isConfirmed) {
-                    fetch(`/clients/${id}/activate`, {
+
+                    fetch(`/clients/${id}/deactivate`, {
+
                             method: 'PUT',
+
                             headers: {
+
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
+
                                 'Accept': 'application/json',
+
                             }
+
                         })
+
                         .then(response => {
+
                             if (!response.ok) {
-                                throw new Error('Error al activar el cliente.');
+                                throw new Error('Error al eliminar el cliente.');
                             }
 
                             return response.json();
+
                         })
+
                         .then(data => {
 
                             if (data.success) {
+
                                 Swal.fire({
-                                    title: "¡Actualizado!",
-                                    text: "El cliente ha sido activado.",
+
+                                    title: "¡Cliente eliminado!",
+
+                                    text: "El cliente fue eliminado del listado y su historial se conservó.",
+
                                     icon: "success",
+
                                     confirmButtonText: "Aceptar"
+
                                 }).then(() => {
+
                                     location.reload();
+
                                 });
+
                             }
 
                         })
+
                         .catch(error => {
+
                             Swal.fire(
                                 "Error",
                                 error.message,
                                 "error"
                             );
+
                         });
+
                 }
+
             });
+
         }
     </script>
 @endsection

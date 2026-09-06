@@ -1,50 +1,45 @@
 <div class="sidebar">
-<div class="px-4 mb-4">
-    <div class="flex items-center gap-3 mb-2">
-        <img src="{{ asset('images/logo-blanco.png') }}" 
-             alt="Logo Productos YAVÉ"
-             class="w-12 h-12 object-contain">
+    <div class="px-4 mb-4">
+        <div class="flex items-center gap-3 mb-2">
+            <img src="{{ asset('images/logo-blanco.png') }}" alt="Logo Productos YAVÉ" class="w-12 h-12 object-contain">
 
-        <h2 class="text-xl font-bold text-white">
-            Productos YAVÉ
-        </h2>
+            <h2 class="text-xl font-bold text-white">
+                Productos YAVÉ
+            </h2>
+        </div>
+
+        <hr class="border-gray-600">
     </div>
 
-    <hr class="border-gray-600">
-</div>
-
     {{-- Dashboard --}}
-    <a href="{{ route('admin.dashboard') }}" 
-       class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
         <i class="bi bi-speedometer me-2"></i> Dashboard
     </a>
 
     {{-- Usuarios --}}
-    <a href="{{ route('admin.users.index') }}" 
-       class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+    <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
         <i class="bi bi-people-fill me-2"></i> Gestión de Usuarios
     </a>
 
     {{-- Clientes --}}
-    <a href="{{ route('clients.index') }}" 
-       class="{{ request()->routeIs('clients.*') ? 'active' : '' }}">
+    <a href="{{ route('clients.index') }}" class="{{ request()->routeIs('clients.*') ? 'active' : '' }}">
         <i class="bi bi-person-vcard-fill me-2"></i> Gestión de Clientes
     </a>
 
     {{-- Categorías --}}
-    <a href="{{ route('admin.categories.index') }}" 
-       class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+    <a href="{{ route('admin.categories.index') }}"
+        class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
         <i class="bi bi-grid-fill me-2"></i> Gestión de Categorías
     </a>
 
     {{-- Productos --}}
-    <a href="#" class="">
+    <a href="{{ route('products.index') }}" class="{{ request()->routeIs('admin.products.*' ? 'active' : '') }}">
         <i class="bi bi-box-seam-fill me-2"></i> Gestión de Productos
     </a>
 
     {{-- Medios de pago --}}
-    <a href="{{ route('admin.payment_methods.index') }}" 
-       class="{{ request()->routeIs('admin.payment_methods.*') ? 'active' : '' }}">
+    <a href="{{ route('admin.payment_methods.index') }}"
+        class="{{ request()->routeIs('admin.payment_methods.*') ? 'active' : '' }}">
         <i class="bi bi-credit-card-fill me-2"></i> Medios de Pago
     </a>
 
@@ -59,8 +54,7 @@
     </a>
 
     {{-- Perfil --}}
-    <a href="{{ route('profile.edit') }}"
-       class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+    <a href="{{ route('profile.edit') }}" class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}">
         <i class="bi bi-person-circle me-2"></i> Mi Perfil
     </a>
 </div>

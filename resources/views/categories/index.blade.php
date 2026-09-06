@@ -1,16 +1,18 @@
 @extends('layouts.admin')
 
-@section('content')
-    <div class="p-6 bg-white rounded-lg shadow">
+@section('content') <div class="p-6 bg-white rounded-lg shadow">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-2xl font-bold">Categorías</h2>
+
             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
                 <i class="bi bi-folder-plus"></i> Registrar categoría
             </a>
         </div>
 
         @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
         @endif
 
         {{-- Barra de búsqueda --}}
@@ -19,6 +21,7 @@
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Buscar por nombre..."
                         value="{{ request('search') }}">
+
                     <button class="btn btn-primary">
                         <i class="bi bi-search"></i>
                     </button>
@@ -26,11 +29,11 @@
             </form>
         </div>
 
-        <table class="table table-bordered">
+        <table class="table table-bordered align-middle">
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Estado</th>
+
                     @if (auth()->user()->role->name === 'Administrador')
                         <th>Acciones</th>
                     @endif
@@ -38,48 +41,47 @@
             </thead>
 
             <tbody>
-                @if (request('search') && $categories->isEmpty())
+
+                @if ($categories->isEmpty())
                     <tr>
-                        <td colspan="{{ auth()->user()->role->name === 'Administrador' ? 3 : 2 }}"
+                        <td colspan="{{ auth()->user()->role->name === 'Administrador' ? 2 : 1 }}"
                             class="text-center text-muted">
-                            No se encontraron categorías con ese nombre.
+                            @if (request('search'))
+                                No se encontraron categorías con ese nombre.
+                            @else
+                                No hay categorías registradas.
+                            @endif
                         </td>
                     </tr>
                 @else
                     @foreach ($categories as $category)
                         <tr>
-                            <td>{{ $category->name }}</td>
                             <td>
-                                <span class="badge {{ $category->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ ucfirst($category->status) }}
-                                </span>
+                                {{ $category->name }}
                             </td>
 
                             @if (auth()->user()->role->name === 'Administrador')
                                 <td>
-                                    @if ($category->status === 'active')
+
                                     <a href="{{ route('admin.categories.edit', $category->id) }}"
                                         class="btn btn-sm btn-warning">
                                         Editar
                                     </a>
 
-                                    <button class="btn btn-sm btn-danger"
-                                        onclick="deactivateCategory({{ $category->id }})">
-                                        Desactivar
+                                    <button class="btn btn-sm btn-danger" onclick="deactivateCategory({{ $category->id }})">
+                                        Eliminar
                                     </button>
-                                    @else
-                                        <button class="btn btn-sm btn-success"
-                                            onclick="activateCategory({{ $category->id }})">
-                                            Activar
-                                        </button>
-                                    @endif
+
                                 </td>
                             @endif
+
                         </tr>
                     @endforeach
                 @endif
+
             </tbody>
         </table>
+
     </div>
 
     {{-- SweetAlert2 --}}
@@ -87,59 +89,49 @@
 
     <script>
         function deactivateCategory(id) {
+
             Swal.fire({
-                title: "¿Desactivar categoría?",
-                text: "La categoría pasará a estado inactivo.",
+                title: "¿Eliminar categoría?",
+                text: "La categoría dejará de aparecer. Su historial se conservará.",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#6c757d",
                 cancelButtonText: "Cancelar",
-                confirmButtonText: "Sí, desactivar"
+                confirmButtonText: "Sí, eliminar"
             }).then((result) => {
+
                 if (result.isConfirmed) {
+
                     fetch(`/admin/categories/${id}/deactivate`, {
                             method: 'PUT',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Accept': 'application/json',
                             }
-                        }).then(res => res.json())
+                        })
+                        .then(res => res.json())
                         .then(data => {
-                            if (data.success) {
-                                location.reload();
-                            }
-                        });
-                }
-            });
-        }
 
-        function activateCategory(id) {
-            Swal.fire({
-                title: "¿Activar categoría?",
-                text: "La categoría pasará a estado activo.",
-                icon: "info",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, activar",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/admin/categories/${id}/activate`, {
-                            method: 'PUT',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                            }
-                        }).then(res => res.json())
-                        .then(data => {
                             if (data.success) {
-                                location.reload();
+
+                                Swal.fire({
+                                    title: "¡Eliminada!",
+                                    text: "La categoría fue eliminada correctamente.",
+                                    icon: "success",
+                                    confirmButtonText: "Aceptar"
+                                }).then(() => {
+                                    location.reload();
+                                });
+
                             }
+
                         });
+
                 }
+
             });
+
         }
     </script>
 

@@ -84,7 +84,9 @@ class UserController extends Controller
     {
         $users = User::whereHas('role', function ($q) {
             $q->where('name', 'Vendedor');
-        })->get();
+        })
+        ->where('status', 'active')
+        ->get();
 
         return view('users.index', compact('users'));
     }

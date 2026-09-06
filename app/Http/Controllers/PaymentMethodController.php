@@ -11,6 +11,10 @@ class PaymentMethodController extends Controller
     {
         $query = PaymentMethod::query();
 
+        // Mostrar únicamente métodos de pago activos
+        $query->where('status', 'active');
+
+        // Búsqueda por nombre
         if ($request->filled('search')) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
         }
@@ -28,10 +32,10 @@ class PaymentMethodController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|min:3|max:100',
+            'name' => 'required|string|min:2|max:100',
         ], [
             'name.required' => 'El nombre del método de pago es obligatorio.',
-            'name.min' => 'El nombre debe tener al menos 3 caracteres.',
+            'name.min' => 'El nombre debe tener al menos 2 caracteres.',
             'name.max' => 'El nombre no puede superar los 100 caracteres.',
         ]);
 

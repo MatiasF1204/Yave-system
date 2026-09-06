@@ -1,128 +1,254 @@
 @extends('layouts.admin')
 
-@section('content')
-    <div class="p-6 bg-white rounded-lg shadow">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl font-bold">Usuarios</h2>
-            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                <i class="bi bi-person-plus"></i> Registrar usuario
-            </a>
-        </div>
+@section('content') <div class="p-6 bg-white rounded-lg shadow">
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-2xl font-bold">Usuarios</h2>
 
-        <table class="table table-bordered align-middle">
-            {{-- Cabezera de la tabla --}}
-            <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($users as $user)
-                    <tr id="user-{{ $user->id }}">
-                        <td>
-                            {{ $user->name }}
-                        </td>
-
-                        <td>{{ $user->email }}</td>
-
-                        <td>{{ $user->role ? $user->role->name : 'Sin rol' }}</td>
-
-                        <td>
-                            <span class="badge {{ $user->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
-                                {{ ucfirst($user->status) }}
-                            </span>
-                        </td>
-
-                        <td>
-                            {{-- Valida que no se muestre el botón de editar, si el usuario está inactivo --}}
-                            @if ($user->status === 'active')
-                                <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-primary">
-                                    Editar
-                                </a>
-
-                                <button onclick="deactivateUser({{ $user->id }})" class="btn btn-sm btn-danger">
-                                    Desactivar
-                                </button>
-                            @else
-                                <button onclick="activateUser({{ $user->id }})" class="btn btn-sm btn-success">
-                                    Activar
-                                </button>
-                            @endif
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+            <i class="bi bi-person-plus"></i>
+            Registrar usuario
+        </a>
     </div>
 
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        // Función que muestra mensaje de inactivación de usuario
-        function deactivateUser(id) {
-            Swal.fire({
-                title: "¿Desactivar usuario?",
-                text: "El usuario no podrá utilizarse.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, desactivar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/admin/users/${id}/deactivate`, {
-                            method: 'PUT',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                            }
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                location.reload();
-                            } else if (data.error) {
-                                Swal.fire("Error", data.error, "error");
-                            }
-                        });
-                }
-            });
-        }
+    {{-- Mensaje de éxito --}}
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
-        function activateUser(id) {
-            Swal.fire({
-                title: "¿Activar usuario?",
-                text: "El usuario estará activo nuevamente.",
-                icon: "info",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, activar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/admin/users/${id}/activate`, {
-                            method: 'PUT',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                            }
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                location.reload();
-                            }
-                        });
-                }
-            });
-        }
-    </script>
+
+    <table class="table table-bordered align-middle">
+
+        {{-- Cabecera de la tabla --}}
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+
+            @foreach ($users as $user)
+
+                <tr id="user-{{ $user->id }}">
+
+                    {{-- Usuario --}}
+                    <td>
+                        {{ $user->name }}
+                    </td>
+
+
+                    {{-- Email --}}
+                    <td>
+                        {{ $user->email }}
+                    </td>
+
+
+                    {{-- Rol --}}
+                    <td>
+                        {{ $user->role ? $user->role->name : 'Sin rol' }}
+                    </td>
+
+
+                    {{-- Acciones --}}
+                    <td>
+
+                        {{-- Si está activo --}}
+                        @if ($user->status === 'active')
+
+                            <a
+                                href="{{ route('admin.users.edit', $user) }}"
+                                class="btn btn-sm btn-primary"
+                            >
+                                <i class="bi bi-pencil"></i>
+                                Editar
+                            </a>
+
+                            <button
+                                onclick="deleteUser({{ $user->id }})"
+                                class="btn btn-sm btn-danger"
+                            >
+                                <i class="bi bi-trash"></i>
+                                Eliminar
+                            </button>
+
+                        @else
+
+                            {{-- Si está inactivo --}}
+                            <button
+                                onclick="activateUser({{ $user->id }})"
+                                class="btn btn-sm btn-success"
+                            >
+                                <i class="bi bi-arrow-clockwise"></i>
+                                Restaurar
+                            </button>
+
+                        @endif
+
+                    </td>
+
+                </tr>
+
+            @endforeach
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+{{-- SweetAlert2 --}}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+
+    // ==========================================
+    // ELIMINAR / DESACTIVAR USUARIO
+    // ==========================================
+
+    function deleteUser(id) {
+
+        Swal.fire({
+
+            title: "¿Eliminar usuario?",
+
+            text: "El usuario dejará de estar disponible. Su historial se conservará.",
+
+            icon: "warning",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#d33",
+
+            cancelButtonColor: "#6c757d",
+
+            confirmButtonText: "Sí, eliminar",
+
+            cancelButtonText: "Cancelar"
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                fetch(`/admin/users/${id}/deactivate`, {
+
+                    method: 'PUT',
+
+                    headers: {
+
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+
+                        'Accept': 'application/json',
+
+                    }
+
+                })
+
+                .then(res => res.json())
+
+                .then(data => {
+
+                    if (data.success) {
+
+                        location.reload();
+
+                    } else if (data.error) {
+
+                        Swal.fire(
+                            "Error",
+                            data.error,
+                            "error"
+                        );
+
+                    }
+
+                });
+
+            }
+
+        });
+
+    }
+
+
+    // ==========================================
+    // RESTAURAR USUARIO
+    // ==========================================
+
+    function activateUser(id) {
+
+        Swal.fire({
+
+            title: "¿Restaurar usuario?",
+
+            text: "El usuario volverá a estar activo y podrá utilizarse nuevamente.",
+
+            icon: "info",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#198754",
+
+            cancelButtonColor: "#6c757d",
+
+            confirmButtonText: "Sí, restaurar",
+
+            cancelButtonText: "Cancelar"
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                fetch(`/admin/users/${id}/activate`, {
+
+                    method: 'PUT',
+
+                    headers: {
+
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+
+                        'Accept': 'application/json',
+
+                    }
+
+                })
+
+                .then(res => res.json())
+
+                .then(data => {
+
+                    if (data.success) {
+
+                        location.reload();
+
+                    } else if (data.error) {
+
+                        Swal.fire(
+                            "Error",
+                            data.error,
+                            "error"
+                        );
+
+                    }
+
+                });
+
+            }
+
+        });
+
+    }
+
+</script>
+
+
 @endsection

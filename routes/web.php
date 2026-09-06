@@ -31,6 +31,7 @@ Route::get('/dashboard', function () {
         return redirect()->route('login');
     }
 
+    // Redirige al dashboard segun el rol
     if ($user->role && $user->role->name === 'Administrador') {
         return redirect()->route('admin.dashboard');
     }
@@ -40,7 +41,6 @@ Route::get('/dashboard', function () {
     }
 
     return redirect()->route('login');
-
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -143,23 +143,23 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
         // Gestión de Productos - ADMIN
         // ------------------------------------------
 
-        // Route::get('/products/create', [ProductController::class, 'create'])
-        //     ->name('products.create');
+        Route::get('/products/create', [ProductController::class, 'create'])
+            ->name('products.create');
 
-        // Route::post('/products', [ProductController::class, 'store'])
-        //     ->name('products.store');
+        Route::post('/products', [ProductController::class, 'store'])
+            ->name('products.store');
 
-        // Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
-        //     ->name('products.edit');
+        Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
+            ->name('products.edit');
 
-        // Route::put('/products/{product}', [ProductController::class, 'update'])
-        //     ->name('products.update');
+        Route::put('/products/{product}', [ProductController::class, 'update'])
+            ->name('products.update');
 
-        // Route::put('/products/{product}/deactivate', [ProductController::class, 'deactivate'])
-        //     ->name('products.deactivate');
+        Route::put('/products/{product}/deactivate', [ProductController::class, 'deactivate'])
+            ->name('products.deactivate');
 
-        // Route::put('/products/{product}/activate', [ProductController::class, 'activate'])
-        //     ->name('products.activate');
+        Route::put('/products/{product}/activate', [ProductController::class, 'activate'])
+            ->name('products.activate');
     });
 
 
@@ -170,9 +170,13 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
 Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
     ->group(function () {
 
-        // Route::get('/products', [ProductController::class, 'index'])
-        //     ->name('products.index');
+        Route::get('/products', [ProductController::class, 'index'])
+            ->name('products.index');
+            
+        Route::get('/products/{product}', [ProductController::class, 'show'])
+            ->name('products.show');
     });
+
 
 
 // ==========================================

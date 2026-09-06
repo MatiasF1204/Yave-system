@@ -12,15 +12,22 @@ class ClientController extends Controller
     {
         $query = Client::query();
 
+        // Mostrar únicamente clientes activos
+        $query->where('status', 'active');
+
         // Búsqueda por DNI
         if ($request->filled('search')) {
             $query->where('dni', 'LIKE', '%' . $request->search . '%');
         }
 
-        $clients = $query->paginate(10)->withQueryString();
+        // Paginación
+        $clients = $query
+            ->paginate(10)
+            ->withQueryString();
 
         return view('clients.index', compact('clients'));
     }
+
 
 
     public function create()
