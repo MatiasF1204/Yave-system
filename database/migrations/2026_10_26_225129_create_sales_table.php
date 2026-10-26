@@ -22,10 +22,6 @@ return new class extends Migration
                 ->constrained('users', 'id')
                 ->restrictOnDelete();
 
-            $table->foreignId('payment_method_id')
-                ->constrained('payment_methods', 'id')
-                ->restrictOnDelete();
-
             // Datos de la venta
             $table->decimal('total', 12, 2)->default(0);
             $table->text('observations')->nullable();
