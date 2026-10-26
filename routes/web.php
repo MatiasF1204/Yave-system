@@ -178,7 +178,6 @@ Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
     });
 
 
-
 // ==========================================
 // RUTAS DE VENDEDOR
 // ==========================================
@@ -191,7 +190,6 @@ Route::middleware(['auth', 'verified', 'role:Vendedor'])
         Route::get('/dashboard', [SellerDashboardController::class, 'index'])
             ->name('dashboard');
     });
-
 
 // ==========================================
 // CLIENTES - ADMINISTRADOR Y VENDEDOR
@@ -221,7 +219,6 @@ Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
         Route::put('/clients/{client}/activate', [ClientController::class, 'activate'])
             ->name('clients.activate');
     });
-
 
 // ==========================================
 // PERFIL - SOLO ADMINISTRADOR

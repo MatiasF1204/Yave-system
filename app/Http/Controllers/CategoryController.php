@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    // Mostrar listado de categorías más búsqueda
+    // Mostrar listado de categorías
     public function index(Request $request)
     {
         $query = Category::where('status', 'active');
@@ -18,7 +18,11 @@ class CategoryController extends Controller
             $query->where('name', 'LIKE', '%' . $request->search . '%');
         }
 
-        $categories = $query->get();
+        // Orden alfabético y paginación
+        $categories = $query
+            ->orderBy('name', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('categories.index', compact('categories'));
     }
@@ -102,14 +106,29 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Categoría actualizada correctamente.');
     }
 
+
     // Desactivar categoría
     public function deactivate(Category $category)
     {
-        // Recibe la categoría y le cambia el status a inactivo
-        $category->update(['status' => 'inactive']);
-        // Mensaje de éxito
-        return response()->json(['success' => true]);
+        // Verificar si la categoría está asociada a algún producto
+        if ($category->products()->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se puede eliminar esta categoría porque está asociada a uno o más productos.'
+            ], 422);
+        }
+
+        // Si no tiene productos asociados, desactivarla
+        $category->update([
+            'status' => 'inactive'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'La categoría fue eliminada correctamente.'
+        ]);
     }
+
 
     // Activar categoría
     public function activate(Category $category)

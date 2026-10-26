@@ -22,6 +22,7 @@ class ClientController extends Controller
 
         // Paginación
         $clients = $query
+            ->orderBy('full_name', 'asc')
             ->paginate(10)
             ->withQueryString();
 

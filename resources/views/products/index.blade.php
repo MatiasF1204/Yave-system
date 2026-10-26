@@ -29,8 +29,8 @@
         <div class="mb-4">
             <form action="{{ route('products.index') }}" method="GET">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Buscar producto por nombre..."
-                        value="{{ request('search') }}">
+                    <input type="text" name="search" class="form-control"
+                        placeholder="Buscar por nombre de producto o categoría..." value="{{ request('search') }}">
 
                     <button class="btn btn-primary">
                         <i class="bi bi-search"></i>

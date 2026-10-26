@@ -10,20 +10,30 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     // LISTADO DE PRODUCTOS
+
     public function index(Request $request)
     {
         $query = Product::with('categories')
             ->where('status', 'active');
 
-        // Búsqueda por nombre
+        // Buscar por nombre del producto o nombre de la categoría
         if ($request->filled('search')) {
-            $query->where('name', 'LIKE', '%' . $request->search . '%');
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', '%' . $search . '%')
+                    ->orWhereHas('categories', function ($categoryQuery) use ($search) {
+                        $categoryQuery->where('name', 'LIKE', '%' . $search . '%');
+                    });
+            });
         }
 
+        // Paginar conservando el término de búsqueda
         $products = $query->paginate(10)->withQueryString();
 
         return view('products.index', compact('products'));
     }
+
 
     // MOSTRAR DETALLE DEL PRODUCTO
     public function show(Product $product)
@@ -215,28 +225,32 @@ class ProductController extends Controller
             abort(403, 'No tienes permiso para editar productos.');
         }
 
-
         $validated = $request->validate([
-            'name' => 'required|string|min:3|max:150',
+            'name' => 'required|string|min:3|max:150|unique:products,name,' . $product->id,
             'description' => 'nullable|string|max:1000',
-
             'cost' => 'required|numeric|min:0',
             'transport_cost' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
-
             'stock' => 'required|integer|min:0',
-
             'categories' => 'required|array|min:1',
             'categories.*' => 'exists:categories,id',
-
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'name.required' => 'El nombre del producto es obligatorio.',
             'name.min' => 'El nombre debe tener al menos 3 caracteres.',
+            'name.unique' => 'Ya existe un producto registrado con ese nombre.',
 
             'cost.required' => 'El costo del producto es obligatorio.',
+            'cost.numeric' => 'El costo debe ser un número.',
+            'cost.min' => 'El costo no puede ser negativo.',
+
             'transport_cost.required' => 'El costo del transporte es obligatorio.',
+            'transport_cost.numeric' => 'El costo del transporte debe ser un número.',
+            'transport_cost.min' => 'El costo del transporte no puede ser negativo.',
+
             'price.required' => 'El precio de venta es obligatorio.',
+            'price.numeric' => 'El precio de venta debe ser un número.',
+            'price.min' => 'El precio no puede ser negativo.',
 
             'stock.required' => 'El stock es obligatorio.',
             'stock.integer' => 'El stock debe ser un número entero.',
@@ -244,11 +258,13 @@ class ProductController extends Controller
 
             'categories.required' => 'Debe seleccionar al menos una categoría.',
             'categories.min' => 'Debe seleccionar al menos una categoría.',
+            'categories.*.exists' => 'La categoría seleccionada no es válida.',
 
             'image.image' => 'El archivo debe ser una imagen.',
             'image.mimes' => 'La imagen debe ser JPG, JPEG, PNG o WEBP.',
             'image.max' => 'La imagen no puede superar los 2 MB.',
         ]);
+
 
         // CALCULAR COSTOS
         $totalCost = $validated['cost'] + $validated['transport_cost'];

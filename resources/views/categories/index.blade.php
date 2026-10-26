@@ -82,6 +82,10 @@
             </tbody>
         </table>
 
+        <div class="mt-4">
+            {{ $categories->links() }}
+        </div>
+
     </div>
 
     {{-- SweetAlert2 --}}
@@ -89,7 +93,6 @@
 
     <script>
         function deactivateCategory(id) {
-
             Swal.fire({
                 title: "¿Eliminar categoría?",
                 text: "La categoría dejará de aparecer. Su historial se conservará.",
@@ -100,9 +103,7 @@
                 cancelButtonText: "Cancelar",
                 confirmButtonText: "Sí, eliminar"
             }).then((result) => {
-
                 if (result.isConfirmed) {
-
                     fetch(`/admin/categories/${id}/deactivate`, {
                             method: 'PUT',
                             headers: {
@@ -110,28 +111,37 @@
                                 'Accept': 'application/json',
                             }
                         })
-                        .then(res => res.json())
-                        .then(data => {
+                        .then(async response => {
+                            const data = await response.json();
 
-                            if (data.success) {
-
-                                Swal.fire({
-                                    title: "¡Eliminada!",
-                                    text: "La categoría fue eliminada correctamente.",
-                                    icon: "success",
-                                    confirmButtonText: "Aceptar"
-                                }).then(() => {
-                                    location.reload();
-                                });
-
+                            if (!response.ok || !data.success) {
+                                throw new Error(
+                                    data.message || 'No se pudo desactivar la categoría.'
+                                );
                             }
 
+                            return data;
+                        })
+                        .then(data => {
+                            Swal.fire({
+                                title: "¡Eliminada!",
+                                text: data.message,
+                                icon: "success",
+                                confirmButtonText: "Aceptar"
+                            }).then(() => {
+                                location.reload();
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: "No se puede eliminar",
+                                text: error.message,
+                                icon: "error",
+                                confirmButtonText: "Entendido"
+                            });
                         });
-
                 }
-
             });
-
         }
     </script>
 

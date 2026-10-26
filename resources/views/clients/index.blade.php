@@ -123,10 +123,8 @@
 
 
         {{-- Paginación --}}
-        <div class="d-flex justify-content-center mt-4">
-
+        <div class="mt-4">
             {{ $clients->links() }}
-
         </div>
 
     </div>
