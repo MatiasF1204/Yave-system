@@ -33,7 +33,8 @@
     </a>
 
     {{-- Productos --}}
-    <a href="{{ route('products.index') }}" class="{{ request()->routeIs('admin.products.*' ? 'active' : '') }}">
+    <a href="{{ route('products.index') }}"
+        class="{{ request()->routeIs('products.*', 'admin.products.*') ? 'active' : '' }}">
         <i class="bi bi-box-seam-fill me-2"></i> Gestión de Productos
     </a>
 
@@ -43,10 +44,19 @@
         <i class="bi bi-credit-card-fill me-2"></i> Medios de Pago
     </a>
 
-    {{-- Ventas --}}
-    <a href="#">
+
+    {{-- Introducción de Ticket --}}
+    <a href="{{ route('sales.create') }}"
+        class="{{ request()->routeIs('sales.create', 'sales.store') ? 'active' : '' }}">
+        <i class="bi bi-receipt me-2"></i> Introducción de Ticket
+    </a>
+
+    {{-- Gestión de Ventas --}}
+    <a href="{{ route('sales.index') }}"
+        class="{{ request()->routeIs('sales.index', 'sales.show') ? 'active' : '' }}">
         <i class="bi bi-cash-stack me-2"></i> Gestión de Ventas
     </a>
+
 
     {{-- Reportes --}}
     <a href="#">

@@ -49,12 +49,12 @@ class Sale extends Model
     }
 
     // Productos incluidos en la venta
-    // public function details(): HasMany
-    // {
-    //     return $this->hasMany(
-    //         SaleDetail::class,
-    //         'sale_id',
-    //         'sale_id'
-    //     );
-    // }
+    public function details(): HasMany
+    {
+        return $this->hasMany(
+            SaleDetail::class,
+            'sale_id',
+            'sale_id'
+        );
+    }
 }

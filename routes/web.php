@@ -7,6 +7,7 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -218,6 +219,35 @@ Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
 
         Route::put('/clients/{client}/activate', [ClientController::class, 'activate'])
             ->name('clients.activate');
+    });
+
+
+// ==========================================
+// VENTAS - ADMINISTRADOR Y VENDEDOR
+// ==========================================
+
+Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
+    ->prefix('sales')
+    ->name('sales.')
+    ->controller(SaleController::class)
+    ->group(function () {
+
+        // Listado de ventas
+        Route::get('/', 'index')
+            ->name('index');
+
+        // Formulario para registrar una venta
+        Route::get('/create', 'create')
+            ->name('create');
+
+        // Guardar una venta
+        Route::post('/', 'store')
+            ->name('store');
+
+        // Ver el detalle de una venta
+        Route::get('/{sale}', 'show')
+            ->whereNumber('sale')
+            ->name('show');
     });
 
 // ==========================================
