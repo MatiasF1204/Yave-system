@@ -6,38 +6,70 @@ use App\Models\Client;
 use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class SaleController extends Controller
 {
-    // Mostrar el listado de ventas.
-
-
+    // Mostrar el listado de ventas
     public function index(Request $request)
     {
         $query = Sale::with(['client', 'user'])
             ->orderByDesc('sale_date');
 
-        if ($request->filled('search')) {
-            $search = trim($request->search);
+        // Número de venta
+        if ($request->filled('sale_id')) {
+            $query->where('sale_id', $request->sale_id);
+        }
 
-            $query->where(function ($q) use ($search) {
-                if (is_numeric($search)) {
-                    $q->where('sale_id', (int) $search);
-                }
+        // DNI del cliente
+        if ($request->filled('dni')) {
+            $dni = trim($request->dni);
 
-                $q->orWhereHas('client', function ($clientQuery) use ($search) {
-                    $clientQuery->where('full_name', 'like', "%{$search}%");
-                });
+            $query->whereHas('client', function ($clientQuery) use ($dni) {
+                $clientQuery->where('dni', 'like', "%{$dni}%");
             });
         }
 
-        $sales = $query->paginate(15)->withQueryString();
+        // Vendedor
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
 
-        return view('sale.index', compact('sales'));
+        // Estado de la venta
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Rango de fechas
+        $fechaDesde = $request->input('date_from');
+        $fechaHasta = $request->input('date_to');
+
+        if ($fechaDesde && $fechaHasta) {
+            $query->whereBetween('sale_date', [
+                $fechaDesde . ' 00:00:00',
+                $fechaHasta . ' 23:59:59',
+            ]);
+        } elseif ($fechaDesde) {
+            $query->where('sale_date', '>=', $fechaDesde . ' 00:00:00');
+        } elseif ($fechaHasta) {
+            $query->where('sale_date', '<=', $fechaHasta . ' 23:59:59');
+        } else {
+            // Sin fechas seleccionadas, mostrar solamente las ventas de hoy.
+            $query->whereDate('sale_date', today());
+        }
+
+        // 10 ventas por página y conservación de los filtros
+        $sales = $query->paginate(10)->withQueryString();
+
+        // Opciones para el filtro de vendedor
+        $users = User::orderBy('name')->get();
+
+        return view('sale.index', compact('sales', 'users'));
     }
+
 
 
     // Muestra formulario para registrar una venta
