@@ -1,7 +1,7 @@
  @extends('layouts.admin')
 
  @section('content')
-     <div class="container-fluid clients-page">
+     <div class="container-fluid clients-page p-0">
 
          {{-- Encabezado --}}
          <div class="clients-heading mb-4">

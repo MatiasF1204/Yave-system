@@ -1019,7 +1019,7 @@
 
         .product-create-page .product-create-note {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 10px;
             margin-top: 18px;
             padding: 14px 17px;

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="container-fluid categories-page">
+    <div class="container-fluid categories-page p-0">
 
         {{-- Encabezado --}}
         <div class="categories-heading mb-4">
