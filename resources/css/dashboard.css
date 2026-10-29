@@ -1,0 +1,583 @@
+.admin-dashboard {
+    --dash-navy: #142b4a;
+    --dash-navy-light: #1d416b;
+    --dash-blue: #285d91;
+    --dash-border: #d4deea;
+    --dash-text: #26384d;
+    --dash-muted: #718096;
+    color: var(--dash-text);
+    padding-bottom: 24px;
+}
+
+.admin-dashboard .dashboard-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 28px 30px;
+    margin-bottom: 24px;
+    color: white;
+    border-radius: 16px;
+    background: linear-gradient(
+        120deg,
+        var(--dash-navy),
+        var(--dash-navy-light)
+    );
+    box-shadow: 0 8px 22px rgba(20, 43, 74, 0.12);
+}
+
+.admin-dashboard .dashboard-eyebrow {
+    display: inline-block;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+}
+
+.admin-dashboard .dashboard-heading h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 750;
+    margin: 0 0 8px;
+}
+
+.admin-dashboard .dashboard-heading p {
+    color: rgba(255, 255, 255, 0.78);
+    margin: 0;
+}
+
+.admin-dashboard .dashboard-date {
+    padding: 11px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.admin-dashboard .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.admin-dashboard .stat-card {
+    background: #fff;
+    border: 1px solid var(--dash-border);
+    border-radius: 14px;
+    padding: 21px;
+    min-width: 0;
+    box-shadow: 0 3px 12px rgba(30, 55, 85, 0.035);
+    border-top: 3px solid var(--dash-blue);
+}
+
+.admin-dashboard .stat-profit {
+    border-top-color: #198754;
+}
+
+.admin-dashboard .stat-products {
+    border-top-color: #d99a17;
+}
+
+.admin-dashboard .stat-clients {
+    border-top-color: #7056b8;
+}
+
+.admin-dashboard .stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    color: var(--dash-muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.admin-dashboard .stat-icon {
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: #eaf1f9;
+    color: var(--dash-blue);
+    font-size: 1.05rem;
+}
+
+.admin-dashboard .stat-profit .stat-icon {
+    background: #e8f6ee;
+    color: #198754;
+}
+
+.admin-dashboard .stat-products .stat-icon {
+    background: #fff4dc;
+    color: #b77908;
+}
+
+.admin-dashboard .stat-clients .stat-icon {
+    background: #f0eaff;
+    color: #7056b8;
+}
+
+.admin-dashboard .stat-value {
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+    font-weight: 750;
+    letter-spacing: -0.6px;
+    margin: 15px 0 8px;
+    overflow-wrap: anywhere;
+}
+
+.admin-dashboard .stat-description {
+    font-size: 0.78rem;
+    color: var(--dash-muted);
+}
+
+.admin-dashboard .dashboard-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 22px;
+    margin-bottom: 24px;
+}
+
+.admin-dashboard .dashboard-panel {
+    min-width: 0;
+    background: #fff;
+    border: 1px solid var(--dash-border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(30, 55, 85, 0.035);
+}
+
+.admin-dashboard .dashboard-main-grid .dashboard-panel {
+    padding: 23px;
+}
+
+.admin-dashboard .panel-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.admin-dashboard .panel-heading h2 {
+    font-size: 1rem;
+    font-weight: 750;
+    margin: 0 0 5px;
+}
+
+.admin-dashboard .panel-heading p {
+    font-size: 0.81rem;
+    color: var(--dash-muted);
+    margin: 0;
+}
+
+.admin-dashboard .panel-title-icon {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #eaf1f9;
+    color: var(--dash-blue);
+}
+
+.admin-dashboard .warning-icon {
+    background: #fff4dc;
+    color: #b77908;
+}
+
+.admin-dashboard .sales-chart {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    height: 205px;
+    padding-top: 12px;
+}
+
+.admin-dashboard .chart-column {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+}
+
+.admin-dashboard .chart-bar-area {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    flex: 1;
+    width: 100%;
+    max-width: 48px;
+    border-bottom: 1px solid #e5eaf1;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 48px,
+        #edf1f6 49px,
+        transparent 50px
+    );
+}
+
+.admin-dashboard .chart-bar {
+    width: 70%;
+    min-width: 10px;
+    border-radius: 6px 6px 0 0;
+    background: linear-gradient(180deg, #4383bd, #285d91);
+    transition: height 0.3s ease;
+}
+
+.admin-dashboard .chart-bar-empty {
+    height: 2px !important;
+    background: #dce4ed;
+}
+
+.admin-dashboard .chart-tooltip {
+    position: absolute;
+    top: -18px;
+    font-size: 0.66rem;
+    color: var(--dash-muted);
+    white-space: nowrap;
+}
+
+.admin-dashboard .chart-label {
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: var(--dash-muted);
+}
+
+.admin-dashboard .chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    color: var(--dash-muted);
+    font-size: 0.78rem;
+}
+
+.admin-dashboard .legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    background: var(--dash-blue);
+}
+
+.admin-dashboard .stock-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.admin-dashboard .stock-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 13px;
+    border-radius: 10px;
+    background: #f6f8fb;
+    color: var(--dash-muted);
+    font-size: 0.78rem;
+}
+
+.admin-dashboard .stock-summary-number {
+    font-size: 1.45rem;
+    font-weight: 750;
+}
+
+.admin-dashboard .stock-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-dashboard .stock-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #edf1f6;
+}
+
+.admin-dashboard .stock-item:last-child {
+    border-bottom: 0;
+}
+
+.admin-dashboard .stock-product-icon {
+    display: grid;
+    place-items: center;
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: #f0f3f8;
+    color: #52677f;
+}
+
+.admin-dashboard .stock-product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-dashboard .stock-product-name {
+    font-size: 0.83rem;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+}
+
+.admin-dashboard .stock-product-info small {
+    font-size: 0.74rem;
+    color: var(--dash-muted);
+}
+
+.admin-dashboard .stock-status,
+.admin-dashboard .dashboard-status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-dashboard .stock-empty,
+.admin-dashboard .status-cancelled {
+    background: #fdeaea;
+    color: #b42318;
+}
+
+.admin-dashboard .stock-low {
+    background: #fff4dc;
+    color: #986500;
+}
+
+.admin-dashboard .panel-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--dash-blue);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.admin-dashboard .panel-link:hover {
+    color: var(--dash-navy);
+    text-decoration: underline;
+}
+
+.admin-dashboard .stock-list + .panel-link {
+    margin-top: 16px;
+}
+
+.admin-dashboard .recent-sales-panel {
+    margin-bottom: 10px;
+}
+
+.admin-dashboard .panel-heading-between {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 22px 24px 0;
+}
+
+.admin-dashboard .dashboard-table thead th {
+    padding: 14px 17px;
+    background: #263f5e;
+    color: #fff;
+    font-size: 0.76rem;
+    font-weight: 650;
+    white-space: nowrap;
+    border: 0;
+}
+
+.admin-dashboard .dashboard-table tbody td {
+    padding: 14px 17px;
+    border-color: #e9eef4;
+    font-size: 0.83rem;
+}
+
+.admin-dashboard .dashboard-table tbody tr:nth-child(even) {
+    background: #f7f9fc;
+}
+
+.admin-dashboard .dashboard-table tbody tr:hover {
+    background: #eaf1f9;
+}
+
+.admin-dashboard .sale-number {
+    color: var(--dash-blue);
+    font-weight: 750;
+}
+
+.admin-dashboard .status-active {
+    background: #e6f6ec;
+    color: #187443;
+}
+
+.admin-dashboard .status-other {
+    background: #edf1f6;
+    color: #52677f;
+}
+
+.admin-dashboard .btn-view-sale {
+    display: inline-grid;
+    place-items: center;
+    width: 33px;
+    height: 33px;
+    border-radius: 8px;
+    background: #eaf1f9;
+    color: var(--dash-blue);
+    text-decoration: none;
+}
+
+.admin-dashboard .btn-view-sale:hover {
+    background: var(--dash-blue);
+    color: #fff;
+}
+
+.admin-dashboard .dashboard-empty {
+    text-align: center;
+    padding: 25px 12px;
+    color: var(--dash-muted);
+}
+
+.admin-dashboard .dashboard-empty i {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #9aaabd;
+}
+
+.admin-dashboard .dashboard-empty p {
+    margin: 0;
+    font-size: 0.84rem;
+}
+
+@media (max-width: 1200px) {
+    .admin-dashboard .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-dashboard .dashboard-main-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-dashboard .dashboard-heading {
+        padding: 22px 19px;
+    }
+
+    .admin-dashboard .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .admin-dashboard .stat-card {
+        padding: 18px;
+    }
+
+    .admin-dashboard .dashboard-main-grid .dashboard-panel {
+        padding: 17px;
+    }
+
+    .admin-dashboard .sales-chart {
+        gap: 6px;
+        height: 175px;
+    }
+
+    .admin-dashboard .chart-tooltip {
+        font-size: 0.58rem;
+    }
+
+    .admin-dashboard .panel-heading-between {
+        padding: 18px 17px 0;
+    }
+}
+
+/* ===== Animaciones del dashboard ===== */
+
+/* Entrada progresiva de las tarjetas */
+.admin-dashboard .stat-card {
+    opacity: 0;
+    animation: dashboardFadeUp 0.55s ease forwards;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+    will-change: transform;
+}
+
+.admin-dashboard .stat-card:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.admin-dashboard .stat-card:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.admin-dashboard .stat-card:nth-child(3) {
+    animation-delay: 0.25s;
+}
+
+.admin-dashboard .stat-card:nth-child(4) {
+    animation-delay: 0.35s;
+}
+
+/* Efecto al pasar el mouse */
+.admin-dashboard .stat-card:hover {
+    transform: translateY(-5px) scale(1.025);
+    box-shadow: 0 12px 28px rgba(20, 43, 74, 0.16);
+    border-color: #b8cce3;
+    z-index: 2;
+}
+
+/* Animación de entrada general */
+@keyframes dashboardFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animación de las barras del gráfico */
+.admin-dashboard .chart-bar {
+    transform: scaleY(0);
+    transform-origin: bottom;
+    animation: dashboardBarGrow 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes dashboardBarGrow {
+    to {
+        transform: scaleY(1);
+    }
+}
+
+/* Aparición suave de las secciones */
+.admin-dashboard .dashboard-section {
+    animation: dashboardFadeUp 0.65s ease both;
+    animation-delay: 0.25s;
+}
+
+/* Respetar a quienes prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .admin-dashboard *,
+    .admin-dashboard *::before,
+    .admin-dashboard *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

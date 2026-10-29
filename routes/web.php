@@ -141,7 +141,7 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
 
 
         // ------------------------------------------
-        // Gestión de Productos - ADMIN
+        // Gestión de Productos
         // ------------------------------------------
 
         Route::get('/products/create', [ProductController::class, 'create'])
@@ -248,6 +248,12 @@ Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
         Route::get('/{sale}', 'show')
             ->whereNumber('sale')
             ->name('show');
+
+        // Anular una venta: únicamente el administrador
+        Route::put('/{sale}/cancel', 'cancel')
+            ->whereNumber('sale')
+            ->middleware('role:Administrador')
+            ->name('cancel');
     });
 
 // ==========================================

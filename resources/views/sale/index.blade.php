@@ -78,7 +78,7 @@
 
                         {{-- Vendedor --}}
                         <div class="col-12 col-sm-6 col-lg-4">
-                            <label for="user_id" class="form-label">
+                            <label for="user_id" class="form-label ">
                                 <i class="fas fa-user-tie me-1 text-primary"></i>
                                 Vendedor
                             </label>
@@ -187,11 +187,11 @@
                 <table class="table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>N.º de venta</th>
-                            <th>Fecha y hora</th>
-                            <th>Cliente</th>
-                            <th>Vendedor</th>
-                            <th class="text-end">Total</th>
+                            <th class="text-start">N.º de venta</th>
+                            <th class="text-start">Fecha y hora</th>
+                            <th class="text-start">Cliente</th>
+                            <th class="text-start">Vendedor</th>
+                            <th class="text-start">Total</th>
                             <th class="text-center">Estado</th>
                             <th class="text-center">Acciones</th>
                         </tr>
@@ -200,13 +200,13 @@
                     <tbody>
                         @forelse ($sales as $sale)
                             <tr>
-                                <td>
+                                <td class="text-start">
                                     <span class="sale-number">
                                         #{{ $sale->sale_id }}
                                     </span>
                                 </td>
 
-                                <td class="text-nowrap">
+                                <td class="text-nowrap text-start">
                                     <div class="fw-semibold">
                                         {{ \Carbon\Carbon::parse($sale->sale_date)->format('d/m/Y') }}
                                     </div>
@@ -215,7 +215,7 @@
                                     </small>
                                 </td>
 
-                                <td>
+                                <td class="text-start">
                                     <div class="fw-semibold">
                                         {{ $sale->client->full_name ?? 'Sin cliente' }}
                                     </div>
@@ -227,12 +227,12 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                <td class="text-start">
                                     <i class="fas fa-user-circle text-muted me-1"></i>
                                     {{ $sale->user->name ?? 'Sin vendedor' }}
                                 </td>
 
-                                <td class="text-end">
+                                <td class="text-start">
                                     <span class="sale-total">
                                         ${{ number_format((float) $sale->total, 2, ',', '.') }}
                                     </span>
@@ -257,11 +257,25 @@
                                 </td>
 
                                 <td class="text-center">
-                                    <a href="{{ route('sales.show', $sale) }}" class="btn btn-sm btn-detail"
-                                        title="Ver detalle de la venta">
-                                        <i class="fas fa-eye me-1"></i>
-                                        Ver detalle
-                                    </a>
+                                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+
+                                        <a href="{{ route('sales.show', $sale) }}" class="btn btn-sm btn-detail"
+                                            title="Ver detalle de la venta">
+                                            <i class="fas fa-eye me-1"></i>
+                                            Ver detalle
+                                        </a>
+
+                                        @if (auth()->user()->role->name === 'Administrador' && $sale->status === 'active')
+                                            <button type="button" class="btn btn-sm btn-cancel-sale"
+                                                data-url="{{ route('sales.cancel', $sale) }}"
+                                                data-sale-number="{{ $sale->sale_id }}"
+                                                data-sale-total="{{ number_format((float) $sale->total, 2, ',', '.') }}">
+                                                <i class="fas fa-ban me-1"></i>
+                                                Anular venta
+                                            </button>
+                                        @endif
+
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -322,4 +336,108 @@
         </div>
 
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-cancel-sale').forEach(function(button) {
+                button.addEventListener('click', async function() {
+                    const url = button.dataset.url;
+                    const saleNumber = button.dataset.saleNumber;
+                    const saleTotal = button.dataset.saleTotal;
+
+                    const result = await Swal.fire({
+                        title: '¿Anular esta venta?',
+                        html: `
+                    <p>Vas a anular la venta <strong>#${saleNumber}</strong>.</p>
+                    <p>Total registrado: <strong>$${saleTotal}</strong></p>
+                    <p class="text-danger small">
+                        El stock se restablecerá y la venta dejará de
+                        contabilizarse como una venta activa.
+                    </p>
+                `,
+                        icon: 'warning',
+                        input: 'password',
+                        inputLabel: 'Contraseña del administrador',
+                        inputPlaceholder: 'Ingresá tu contraseña',
+                        inputAttributes: {
+                            autocomplete: 'current-password',
+                            autocapitalize: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Confirmar anulación',
+                        cancelButtonText: 'Volver',
+                        confirmButtonColor: '#b42318',
+                        cancelButtonColor: '#64748b',
+                        reverseButtons: true,
+                        inputValidator: function(value) {
+                            if (!value) {
+                                return 'Debés ingresar tu contraseña.';
+                            }
+                        }
+                    });
+
+                    if (!result.isConfirmed) {
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': @json(csrf_token())
+                            },
+                            body: JSON.stringify({
+                                password: result.value
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok || !data.success) {
+                            let message = data.message || 'No se pudo anular la venta.';
+
+                            if (data.errors) {
+                                const firstError = Object.values(data.errors).flat()[0];
+
+                                if (firstError) {
+                                    message = firstError;
+                                }
+                            }
+
+                            await Swal.fire({
+                                icon: 'error',
+                                title: 'No se pudo completar',
+                                text: message,
+                                confirmButtonText: 'Aceptar'
+                            });
+
+                            return;
+                        }
+
+                        await Swal.fire({
+                            icon: 'success',
+                            title: 'Venta anulada',
+                            text: data.message,
+                            confirmButtonText: 'Aceptar'
+                        });
+
+                        // Actualizar el listado para reflejar el nuevo estado
+                        // y quitar el botón de anulación.
+                        window.location.reload();
+
+                    } catch (error) {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Error de conexión',
+                            text: 'No se pudo contactar con el servidor. Verificá la conexión e intentá nuevamente.',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

@@ -1065,6 +1065,20 @@ body {
     border: 1px solid #ebc0c5;
 }
 
+.sales-page .btn-cancel-sale {
+    background: #fff0f0;
+    color: #b42318;
+    border: 1px solid #f2c5c5;
+    font-weight: 600;
+    transition: all .2s ease;
+}
+
+.sales-page .btn-cancel-sale:hover {
+    background: #b42318;
+    color: #fff;
+    border-color: #b42318;
+}
+
 .sale-detail .status-other {
     background: #e1e7ef;
     color: #43566d;

@@ -9,6 +9,7 @@ use App\Models\Sale;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class SaleController extends Controller
@@ -70,8 +71,6 @@ class SaleController extends Controller
         return view('sale.index', compact('sales', 'users'));
     }
 
-
-
     // Muestra formulario para registrar una venta
     public function create()
     {
@@ -114,7 +113,6 @@ class SaleController extends Controller
             'paymentMethodsData'
         ));
     }
-
 
     // Guardar una venta con sus productos y pagos
     public function store(Request $request)
@@ -285,9 +283,7 @@ class SaleController extends Controller
             ->with('success', 'La venta se registró correctamente.');
     }
 
-    /**
-     * Mostrar el detalle de una venta.
-     */
+    // Mostrar el detalle de una venta.
     public function show(Sale $sale)
     {
         $sale->load([
@@ -298,5 +294,72 @@ class SaleController extends Controller
         ]);
 
         return view('sale.show', compact('sale'));
+    }
+
+    // Anular una venta, restablecer el stock y conservar el historial de la operación
+    public function cancel(Request $request, Sale $sale)
+    {
+        // Verificación adicional del rol.
+        abort_unless(
+            $request->user()->role->name === 'Administrador',
+            403,
+            'Solo un administrador puede anular ventas.'
+        );
+
+        // Validar que se haya ingresado la contraseña.
+        $validated = $request->validate([
+            'password' => ['required', 'string'],
+        ]);
+
+        // Verificar la contraseña del usuario autenticado.
+        if (!Hash::check(
+            $validated['password'],
+            $request->user()->password
+        )) {
+            throw ValidationException::withMessages([
+                'password' => 'La contraseña ingresada es incorrecta.',
+            ]);
+        }
+
+        DB::transaction(function () use ($sale) {
+            // Bloquear la venta para evitar anulaciones simultáneas.
+            $lockedSale = Sale::whereKey($sale->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            // Solo se puede anular una venta activa.
+            if ($lockedSale->status !== 'active') {
+                throw ValidationException::withMessages([
+                    'sale' => 'Esta venta ya está anulada o no se encuentra activa.',
+                ]);
+            }
+
+            // Obtener los detalles de la venta.
+            $details = $lockedSale->details()->get();
+
+            // Devolver al stock las cantidades vendidas.
+            foreach ($details as $detail) {
+                $product = Product::whereKey($detail->product_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$product) {
+                    throw ValidationException::withMessages([
+                        'sale' => 'No se pudo anular la venta porque uno de sus productos ya no existe.',
+                    ]);
+                }
+
+                $product->increment('stock', $detail->quantity);
+            }
+
+            // Conservar la venta y marcarla como anulada.
+            $lockedSale->status = 'cancelled';
+            $lockedSale->save();
+        }, 3);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'La venta fue anulada y el stock se restableció correctamente.',
+        ]);
     }
 }
