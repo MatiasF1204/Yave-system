@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SaleReportController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +61,14 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
 
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
+
+        // ------------------------------------------
+        // Reporte de ventas
+        // ------------------------------------------
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/sales', [SaleReportController::class, 'index'])
+                ->name('sales');
+        });
 
 
         // ------------------------------------------

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <!-- Tailwind / Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/dashboard.css'])
+    @vite(['resources/css/app.css', 'resources/js/app.js','resources/css/profile.css', 'resources/css/dashboard.css'])
 
 </head>
 
