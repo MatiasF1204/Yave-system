@@ -45,7 +45,7 @@
 
             <div class="stat-card stat-profit">
                 <div class="stat-top">
-                    <span>Ganancia estimada</span>
+                    <span>Ganancia</span>
                     <span class="stat-icon">
                         <i class="fas fa-chart-line"></i>
                     </span>
@@ -61,7 +61,7 @@
 
             <div class="stat-card stat-products">
                 <div class="stat-top">
-                    <span>Productos activos</span>
+                    <span>Productos disponibles</span>
                     <span class="stat-icon">
                         <i class="fas fa-boxes"></i>
                     </span>
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="stat-description">
-                    Productos disponibles en el catálogo
+                    Cantidad disponible en el catálogo
                 </div>
             </div>
 

@@ -74,6 +74,21 @@
                          <span class="field-label">Vendedor</span>
                          <p class="field-value">{{ $sale->user->name ?? 'No disponible' }}</p>
                      </div>
+
+
+                     @if ($sale->observations)
+                         <div class="col-12">
+                             <div class="border-top pt-3 mt-2">
+                                 <span class="field-label">
+                                     Observaciones
+                                 </span>
+
+                                 <p class="mb-0 mt-1">
+                                     {{ $sale->observations ?: 'Sin observaciones registradas.' }}
+                                 </p>
+                             </div>
+                         </div>
+                     @endif
                  </div>
              </div>
          </div>
@@ -113,11 +128,14 @@
              </div>
          </div>
 
+
          {{-- Productos vendidos --}}
          <div class="card sale-card mb-4">
              <div class="card-header">
                  <h5 class="mb-0 fw-bold">
-                     <span class="section-icon"><i class="fas fa-shopping-basket"></i></span>
+                     <span class="section-icon">
+                         <i class="fas fa-shopping-basket"></i>
+                     </span>
                      Productos vendidos
                  </h5>
              </div>
@@ -140,10 +158,15 @@
                                      <td class="fw-semibold">
                                          {{ $detail->product->name ?? 'Producto no disponible' }}
                                      </td>
-                                     <td class="text-center">{{ $detail->quantity }}</td>
+
+                                     <td class="text-center">
+                                         {{ $detail->quantity }}
+                                     </td>
+
                                      <td class="text-end text-nowrap">
                                          ${{ number_format((float) $detail->unit_price, 2, ',', '.') }}
                                      </td>
+
                                      <td class="text-end text-nowrap fw-semibold">
                                          ${{ number_format((float) $detail->subtotal, 2, ',', '.') }}
                                      </td>
@@ -155,26 +178,32 @@
                                      </td>
                                  </tr>
                              @endforelse
+
+                             @if ($sale->details->isNotEmpty())
+                                 <tr class="table-light border-top">
+                                     <td class="fw-bold text-end">
+                                         Total de productos:
+                                     </td>
+
+                                     <td class="text-center fw-bold">
+                                         {{ $sale->details->sum('quantity') }}
+                                     </td>
+
+                                     <td class="text-end fw-bold">
+                                         Total a pagar:
+                                     </td>
+
+                                     <td class="text-end text-nowrap fw-bold">
+                                         ${{ number_format((float) $sale->details->sum('subtotal'), 2, ',', '.') }}
+                                     </td>
+                                 </tr>
+                             @endif
                          </tbody>
                      </table>
                  </div>
              </div>
          </div>
 
-         {{-- Observaciones --}}
-         @if ($sale->observations)
-             <div class="card sale-card mb-4">
-                 <div class="card-header">
-                     <h5 class="mb-0 fw-bold">
-                         <span class="section-icon"><i class="fas fa-comment-alt"></i></span>
-                         Observaciones
-                     </h5>
-                 </div>
-                 <div class="card-body p-4">
-                     {{ $sale->observations }}
-                 </div>
-             </div>
-         @endif
 
          {{-- Medios de pago --}}
          <div class="card sale-card mb-4">

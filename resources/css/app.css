@@ -2341,8 +2341,8 @@ body.sidebar-collapsed .sidebar a {
 }
 
 /* =========================================
-           ESTILOS EXCLUSIVOS DE PRODUCTOS
-           ========================================= */
+ESTILOS EXCLUSIVOS DE PRODUCTOS (index.blade.php de products)
+ ========================================= */
 
 .products-page {
     --navy: #142b4a;
@@ -2682,6 +2682,8 @@ body.sidebar-collapsed .sidebar a {
 }
 
 .products-page .product-name {
+    position: relative;
+    display: inline-block;
     width: fit-content;
     max-width: 300px;
     color: var(--navy);
@@ -2690,25 +2692,34 @@ body.sidebar-collapsed .sidebar a {
     line-height: 1.5;
     text-decoration: none;
     overflow-wrap: anywhere;
-    transition: color 0.2s;
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
 }
 
 .products-page .product-name:hover {
     color: var(--blue);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    transform: translateX(4px);
+}
+
+.products-page .product-name::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--blue);
+    transition: width 0.25s ease;
+}
+
+.products-page .product-name:hover::after {
+    width: 100%;
 }
 
 .products-page .product-reference {
     color: #8290a2;
     font-size: 11px;
-}
-
-.products-page .product-price {
-    color: var(--navy);
-    font-size: 14px;
-    font-weight: 750;
-    white-space: nowrap;
 }
 
 /* Stock */

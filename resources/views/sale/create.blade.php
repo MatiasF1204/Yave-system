@@ -48,8 +48,8 @@
                             </label>
 
                             <div class="flex">
-                                <input type="text" id="client-dni" inputmode="numeric" autocomplete="off"
-                                    placeholder="Ingresá el DNI"
+                                <input type="number" id="client-dni" inputmode="numeric" autocomplete="off"
+                                    placeholder="Ingresá el DNI" min="0"
                                     class="min-w-0 w-full rounded-l-lg border border-slate-300 px-3 py-2.5 text-base text-slate-800 outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-200">
 
                                 <button type="button" id="search-client"
@@ -313,13 +313,31 @@
                 if (!client) {
                     clearClient();
                     setClientFeedback('No se encontró un cliente con ese DNI.');
+
+                    Swal.fire({
+                        title: 'Cliente no encontrado',
+                        text: 'No se encontraron clientes registrados con ese DNI. ¿Deseás registrarlo?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, registrar cliente',
+                        cancelButtonText: 'No, volver',
+                        confirmButtonColor: '#1e40af',
+                        cancelButtonColor: '#64748b',
+                        reverseButtons: true
+                    }).then(function(result) {
+                        if (result.isConfirmed) {
+                            const url = new URL(@json(route('clients.create')), window.location.origin);
+                            url.searchParams.set('dni', enteredDni);
+                            window.location.href = url.toString();
+                        }
+                    });
+
                     return;
                 }
 
                 clientId.value = client.id;
-                clientName.textContent = client.full_name || [client.name, client.surname].filter(Boolean).join(
-                        ' ') ||
-                    'Nombre no disponible';
+                clientName.textContent = client.full_name || [client.name, client.surname]
+                    .filter(Boolean).join(' ') || 'Nombre no disponible';
                 clientName.className = 'font-semibold text-slate-800';
 
                 clientCard.className =
@@ -336,7 +354,6 @@
                     findClient();
                 }
             });
-
             clientDni.addEventListener('input', function() {
                 clearClient();
                 setClientFeedback('Presioná Buscar para identificar al cliente.');
@@ -345,7 +362,6 @@
             // ---------------------------------------------------------
             // PRODUCTOS
             // ---------------------------------------------------------
-
             function addProductRow(initial = {}) {
                 const index = productIndex++;
                 const row = document.createElement('tr');
@@ -372,7 +388,7 @@
                 hiddenId.required = true;
                 hiddenId.className = 'product-id';
 
-                // El menú se agrega al body para que no quede cortado por la tabla.
+                // El menú se agrega al body para que no quede cortado por la tabla
                 const dropdown = document.createElement('div');
                 dropdown.className =
                     'product-dropdown fixed z-[9999] hidden max-h-60 overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl';
@@ -392,7 +408,6 @@
                     const spaceAbove = rect.top;
                     const availableSpace = Math.max(spaceBelow, spaceAbove);
                     const maxHeight = Math.max(80, Math.min(240, availableSpace - 12));
-
                     dropdown.style.left =
                         `${Math.max(4, Math.min(rect.left, window.innerWidth - rect.width - 4))}px`;
                     dropdown.style.width = `${Math.min(rect.width, window.innerWidth - 8)}px`;
@@ -479,14 +494,12 @@
                             Number(product.stock) > 0 &&
                             !alreadySelectedElsewhere;
                     });
-
                     if (!available.length) {
                         const empty = document.createElement('div');
                         empty.className = 'px-3 py-3 text-sm text-slate-500';
                         empty.textContent = 'No se encontraron productos disponibles.';
                         dropdown.appendChild(empty);
                     }
-
                     available.forEach(function(product) {
                         const option = document.createElement('button');
                         option.type = 'button';
@@ -496,7 +509,6 @@
                         const name = document.createElement('span');
                         name.className = 'block font-semibold text-slate-800';
                         name.textContent = product.name;
-
                         const details = document.createElement('span');
                         details.className = 'mt-1 block text-xs text-slate-500';
                         details.textContent =
@@ -513,17 +525,13 @@
                             dropdown.classList.add('hidden');
                             updateProducts();
                         });
-
                         dropdown.appendChild(option);
                     });
-
                     dropdown.classList.remove('hidden');
                     positionDropdown();
                 }
-
                 search.addEventListener('focus', renderOptions);
                 search.addEventListener('click', renderOptions);
-
                 search.addEventListener('input', function() {
                     hiddenId.value = '';
                     selectedInfo.textContent = '';
@@ -553,7 +561,6 @@
                     row.remove();
                     updateProducts();
                 });
-
                 if (initial.product_id) {
                     const previous = products.find(function(product) {
                         return String(product.id) === String(initial.product_id);
@@ -567,7 +574,6 @@
                         priceLabel.textContent = money.format(Number(previous.price));
                     }
                 }
-
                 updateProducts();
             }
 
@@ -600,24 +606,19 @@
 
                     total = Math.round((total + subtotal) * 100) / 100;
                 });
-
                 saleTotalAmount = total;
-
                 productsEmpty.classList.toggle(
                     'hidden',
                     productsBody.querySelectorAll('[data-product-row]').length > 0
                 );
-
                 document.getElementById('sale-total').textContent = money.format(total);
                 document.getElementById('payment-sale-total').textContent = money.format(total);
-
                 updatePayments();
             }
 
             // ---------------------------------------------------------
             // MEDIOS DE PAGO
             // ---------------------------------------------------------
-
             function addPaymentRow(initial = {}) {
                 const index = paymentIndex++;
 
@@ -743,11 +744,8 @@
                     const methodName = selected ?
                         selected.textContent.toLocaleLowerCase('es') :
                         '';
-
                     const isCash = methodName.includes('efectivo');
-
                     cashPanel.classList.toggle('hidden', !isCash);
-
                     amountInput.readOnly = isCash;
                     amountInput.min = isCash ? '0' : '0.01';
                     amountInput.placeholder = isCash ?
@@ -764,7 +762,6 @@
 
                     updatePayments();
                 }
-
                 methodSelect.addEventListener('change', updateCashPanel);
                 amountInput.addEventListener('input', updatePayments);
                 receivedInput.addEventListener('input', updatePayments);
@@ -773,7 +770,6 @@
                     row.remove();
                     updatePayments();
                 });
-
                 updateCashPanel();
             }
 
@@ -788,7 +784,7 @@
 
                 const cashRows = [];
 
-                // Sumar los medios que no son efectivo.
+                // Sumar los medios que no son efectivo
                 rows.forEach(function(row) {
                     const methodSelect = row.querySelector('select');
                     const amountInput = row.querySelector('input[name$="[amount]"]');
@@ -805,7 +801,7 @@
                     }
                 });
 
-                // El primer medio de pago en efectivo cubre automáticamente el restante.
+                // El primer medio de pago en efectivo cubre automáticamente el restante
                 const cashAmount = Math.max(
                     0,
                     Math.round((saleTotalAmount - nonCashTotal) * 100) / 100
@@ -914,16 +910,14 @@
             document.getElementById('add-product').addEventListener('click', function() {
                 addProductRow();
             });
-
             document.getElementById('add-payment').addEventListener('click', function() {
                 addPaymentRow();
             });
 
-            // Recuperar productos y pagos si el servidor devolvió errores.
+            // Recuperar productos y pagos si el servidor devolvió errores
             if (Array.isArray(oldProducts) && oldProducts.length) {
                 oldProducts.forEach(addProductRow);
             }
-
             if (Array.isArray(oldPayments) && oldPayments.length) {
                 oldPayments.forEach(addPaymentRow);
             }
@@ -933,7 +927,6 @@
                 const previousClient = clients.find(function(client) {
                     return String(client.id) === String(clientId.value);
                 });
-
                 if (previousClient) {
                     clientDni.value = previousClient.dni ?? '';
                     findClient();
@@ -943,20 +936,19 @@
             // ---------------------------------------------------------
             // VALIDACIÓN ANTES DE REGISTRAR LA VENTA
             // ---------------------------------------------------------
-
             form.addEventListener('submit', function(event) {
                 const errors = [];
                 const productRows = Array.from(
                     productsBody.querySelectorAll('[data-product-row]')
                 );
 
-                // Validar cliente.
+                // Validar cliente
                 if (!clientId.value) {
                     errors.push('Buscá y seleccioná un cliente antes de continuar.');
                     setClientFeedback('Buscá y seleccioná un cliente antes de continuar.');
                 }
 
-                // Validar productos y cantidades.
+                // Validar productos y cantidades
                 const invalidProducts = !productRows.length || productRows.some(function(row) {
                     const productId = row.querySelector('.product-id').value;
                     const quantity = row.querySelector('.quantity-input');
@@ -977,7 +969,7 @@
                     );
                 }
 
-                // Actualizar los importes automáticos antes de validar los pagos.
+                // Actualizar los importes automáticos antes de validar los pagos
                 updatePayments();
 
                 let paymentRows = Array.from(
@@ -987,8 +979,7 @@
                 if (!paymentRows.length) {
                     errors.push('Agregá al menos un medio de pago.');
                 } else {
-                    // Quitar filas de efectivo cuyo importe automático sea cero.
-                    // Esto ocurre cuando los otros medios ya cubren toda la venta.
+                    // Quitar filas de efectivo cuyo importe automático sea cero
                     paymentRows.forEach(function(row) {
                         const method = row.querySelector('select');
                         const amount = row.querySelector('input[name$="[amount]"]');
@@ -1003,9 +994,7 @@
                             row.remove();
                         }
                     });
-
                     updatePayments();
-
                     paymentRows = Array.from(
                         paymentsBody.querySelectorAll('[data-payment-row]')
                     );
@@ -1021,7 +1010,6 @@
 
                             return methodName.includes('efectivo');
                         });
-
                         if (cashRows.length > 1) {
                             errors.push(
                                 'Usá una sola fila de efectivo. El sistema calcula automáticamente el importe restante.'
@@ -1032,7 +1020,6 @@
                             const method = row.querySelector('select');
                             const amount = row.querySelector('input[name$="[amount]"]');
                             const received = row.querySelector('.cash-received');
-
                             if (
                                 !method.value ||
                                 !amount.value ||
@@ -1041,7 +1028,6 @@
                             ) {
                                 return true;
                             }
-
                             const methodName = method.selectedOptions[0].textContent
                                 .toLocaleLowerCase('es');
 
@@ -1051,22 +1037,18 @@
                                     !Number.isFinite(Number(received.value)) ||
                                     Number(received.value) < Number(amount.value);
                             }
-
                             return false;
                         });
-
                         if (invalidPayment) {
                             errors.push(
                                 'Revisá los medios de pago. Todos deben tener un importe válido y, si pagás en efectivo, el dinero recibido debe cubrir el importe pendiente.'
                             );
                         }
-
                         const appliedTotal = paymentRows.reduce(function(sum, row) {
                             return sum + Number(
                                 row.querySelector('input[name$="[amount]"]').value || 0
                             );
                         }, 0);
-
                         if (
                             !invalidPayment &&
                             Math.abs(saleTotalAmount - appliedTotal) > 0.001
@@ -1081,13 +1063,11 @@
                 if (errors.length) {
                     event.preventDefault();
                     showValidationErrors(errors);
-
                     if (!clientId.value) {
                         clientDni.focus({
                             preventScroll: true
                         });
                     }
-
                     return;
                 }
 

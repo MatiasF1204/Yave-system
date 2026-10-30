@@ -73,8 +73,9 @@
                             <i class="bi bi-card-text input-icon"></i>
 
                             <input type="text" id="dni" name="dni"
-                                class="custom-input @error('dni') is-invalid @enderror" value="{{ old('dni') }}"
-                                placeholder="Ingresá el número de DNI" inputmode="numeric" autocomplete="off" required>
+                                class="custom-input @error('dni') is-invalid @enderror"
+                                value="{{ old('dni', request('dni')) }}" placeholder="Ingresá el número de DNI"
+                                inputmode="numeric" autocomplete="off" required>
                         </div>
 
                         @error('dni')
@@ -88,7 +89,8 @@
                     {{-- Teléfono --}}
                     <div class="form-group">
                         <label for="phone" class="custom-label">
-                            Teléfono (opcional)
+                            Teléfono
+                            <span class="required-mark">*</span>
                         </label>
 
                         <div class="input-wrapper">
@@ -137,8 +139,8 @@
 
     <style>
         /* ========================================
-           ESTILOS EXCLUSIVOS DE CREACIÓN DE CLIENTES
-           ======================================== */
+                   ESTILOS EXCLUSIVOS DE CREACIÓN DE CLIENTES
+                   ======================================== */
 
         .client-create-page {
             --navy: #142b4a;

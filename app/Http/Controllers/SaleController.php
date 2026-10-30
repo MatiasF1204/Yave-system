@@ -15,6 +15,7 @@ use Illuminate\Validation\ValidationException;
 class SaleController extends Controller
 {
     // Mostrar el listado de ventas
+
     public function index(Request $request)
     {
         $query = Sale::with(['client', 'user'])
@@ -44,6 +45,13 @@ class SaleController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Medio de pago
+        if ($request->filled('payment_method_id')) {
+            $query->whereHas('payments', function ($paymentQuery) use ($request) {
+                $paymentQuery->where('payment_method_id', $request->payment_method_id);
+            });
+        }
+
         // Rango de fechas
         $fechaDesde = $request->input('date_from');
         $fechaHasta = $request->input('date_to');
@@ -65,11 +73,14 @@ class SaleController extends Controller
         // 10 ventas por página y conservación de los filtros
         $sales = $query->paginate(10)->withQueryString();
 
-        // Opciones para el filtro de vendedor
+        // Opciones para los filtros
         $users = User::orderBy('name')->get();
 
-        return view('sale.index', compact('sales', 'users'));
+        $paymentMethods = PaymentMethod::orderBy('name')->get();
+
+        return view('sale.index', compact('sales', 'users', 'paymentMethods'));
     }
+
 
     // Muestra formulario para registrar una venta
     public function create()
@@ -197,8 +208,8 @@ class SaleController extends Controller
                 // El precio se toma de la base de datos,
                 // nunca del importe enviado por el formulario
                 $unitPrice = (float) $product->price;
-                $subtotal = round($unitPrice * $quantity, 2);
 
+                $subtotal = round($unitPrice * $quantity, 2);
                 $total = round($total + $subtotal, 2);
 
                 $details[] = [

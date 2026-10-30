@@ -49,43 +49,40 @@
 
         {{-- Panel de filtros --}}
         <div class="sales-card mb-4">
-
             <div class="card-body p-4">
                 <form action="{{ route('sales.index') }}" method="GET">
                     <div class="row g-3">
 
+                        {{-- PRIMERA FILA --}}
+
                         {{-- Número de venta --}}
-                        <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="col-12 col-sm-6 col-lg-3">
                             <label for="sale_id" class="form-label">
                                 <i class="fas fa-hashtag me-1 text-primary"></i>
                                 Número de venta
                             </label>
-
                             <input type="number" min="1" name="sale_id" id="sale_id" class="form-control"
                                 placeholder="Ej.: 125" value="{{ request('sale_id') }}">
                         </div>
 
                         {{-- DNI del cliente --}}
-                        <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="col-12 col-sm-6 col-lg-3">
                             <label for="dni" class="form-label">
                                 <i class="fas fa-id-card me-1 text-primary"></i>
                                 DNI del cliente
                             </label>
-
                             <input type="text" name="dni" id="dni" class="form-control"
                                 placeholder="Ingresá el DNI" value="{{ request('dni') }}">
                         </div>
 
                         {{-- Vendedor --}}
-                        <div class="col-12 col-sm-6 col-lg-4">
-                            <label for="user_id" class="form-label ">
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <label for="user_id" class="form-label">
                                 <i class="fas fa-user-tie me-1 text-primary"></i>
                                 Vendedor
                             </label>
-
                             <select name="user_id" id="user_id" class="form-select">
                                 <option value="">Todos los vendedores</option>
-
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}" @selected((string) request('user_id') === (string) $user->id)>
                                         {{ $user->name }}
@@ -94,13 +91,30 @@
                             </select>
                         </div>
 
+                        {{-- Medio de pago --}}
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <label for="payment_method_id" class="form-label">
+                                <i class="fas fa-wallet me-1 text-primary"></i>
+                                Medio de pago
+                            </label>
+                            <select name="payment_method_id" id="payment_method_id" class="form-select">
+                                <option value="">Todos los medios de pago</option>
+                                @foreach ($paymentMethods as $paymentMethod)
+                                    <option value="{{ $paymentMethod->id }}" @selected((string) request('payment_method_id') === (string) $paymentMethod->id)>
+                                        {{ $paymentMethod->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- SEGUNDA FILA --}}
+
                         {{-- Fecha desde --}}
                         <div class="col-12 col-sm-6 col-lg-3">
                             <label for="date_from" class="form-label">
                                 <i class="fas fa-calendar-alt me-1 text-primary"></i>
                                 Fecha desde
                             </label>
-
                             <input type="date" name="date_from" id="date_from" class="form-control"
                                 value="{{ request('date_from') }}">
                         </div>
@@ -111,7 +125,6 @@
                                 <i class="fas fa-calendar-check me-1 text-primary"></i>
                                 Fecha hasta
                             </label>
-
                             <input type="date" name="date_to" id="date_to" class="form-control"
                                 value="{{ request('date_to') }}">
                         </div>
@@ -122,7 +135,6 @@
                                 <i class="fas fa-toggle-on me-1 text-primary"></i>
                                 Estado de la venta
                             </label>
-
                             <select name="status" id="status" class="form-select">
                                 <option value="">Todos los estados</option>
                                 <option value="active" @selected(request('status') === 'active')>
@@ -147,6 +159,7 @@
                                 Limpiar
                             </a>
                         </div>
+
                     </div>
 
                     <div class="mt-3 small text-muted">
@@ -157,6 +170,7 @@
                 </form>
             </div>
         </div>
+
 
         {{-- Resultados --}}
         <div class="sales-card">
@@ -262,7 +276,7 @@
                                         <a href="{{ route('sales.show', $sale) }}" class="btn btn-sm btn-detail"
                                             title="Ver detalle de la venta">
                                             <i class="fas fa-eye me-1"></i>
-                                            Ver detalle
+                                            Ver
                                         </a>
 
                                         @if (auth()->user()->role->name === 'Administrador' && $sale->status === 'active')
@@ -271,7 +285,7 @@
                                                 data-sale-number="{{ $sale->sale_id }}"
                                                 data-sale-total="{{ number_format((float) $sale->total, 2, ',', '.') }}">
                                                 <i class="fas fa-ban me-1"></i>
-                                                Anular venta
+                                                Anular
                                             </button>
                                         @endif
 

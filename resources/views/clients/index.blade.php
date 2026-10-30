@@ -1,6 +1,35 @@
  @extends('layouts.admin')
 
  @section('content')
+     <style>
+         .client-name {
+             font-weight: 600;
+             display: inline-block;
+             transition: color 0.25s ease, transform 0.25s ease;
+             position: relative;
+         }
+
+         .client-name:hover {
+             color: #203b5a;
+             transform: translateX(4px);
+         }
+
+         .client-name::after {
+             content: '';
+             position: absolute;
+             bottom: -3px;
+             left: 0;
+             width: 0;
+             height: 2px;
+             background-color: #203b5a;
+             transition: width 0.25s ease;
+         }
+
+         .client-name:hover::after {
+             width: 100%;
+         }
+     </style>
+     
      <div class="container-fluid clients-page p-0">
 
          {{-- Encabezado --}}
@@ -92,7 +121,7 @@
                      <div>
                          <h5 class="mb-1 fw-bold">Listado de clientes</h5>
                          <small class="text-muted">
-                             Clientes activos registrados en el sistema.
+                             Clientes registrados en el sistema.
                          </small>
                      </div>
                  </div>
@@ -125,9 +154,10 @@
                                              {{ mb_strtoupper(mb_substr($client->full_name, 0, 1)) }}
                                          </span>
 
-                                         <span class="client-name">
+                                         <a href="{{ route('clients.show', $client->id) }}"
+                                             class="client-name text-decoration-none">
                                              {{ $client->full_name }}
-                                         </span>
+                                         </a>
                                      </div>
                                  </td>
 
@@ -235,7 +265,7 @@
                          if (!response.ok) {
                              throw new Error(
                                  'No se pudo eliminar el cliente. Verificá los permisos e intentá nuevamente.'
-                                 );
+                             );
                          }
 
                          return response.json();

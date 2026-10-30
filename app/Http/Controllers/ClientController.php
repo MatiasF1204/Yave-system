@@ -29,7 +29,36 @@ class ClientController extends Controller
         return view('clients.index', compact('clients'));
     }
 
+    // Mostrar el detalle del cliente
+    public function show(Client $client)
+    {
+        // Historial de ventas del cliente
+        $sales = $client->sales()
+            ->with('user')
+            ->orderByDesc('sale_date')
+            ->paginate(10);
 
+        // Resumen de compras: solamente ventas activas
+        $totalSales = $client->sales()
+            ->where('status', 'active')
+            ->count();
+
+        $totalSpent = $client->sales()
+            ->where('status', 'active')
+            ->sum('total');
+
+        $lastSale = $client->sales()
+            ->where('status', 'active')
+            ->max('sale_date');
+
+        return view('clients.show', compact(
+            'client',
+            'sales',
+            'totalSales',
+            'totalSpent',
+            'lastSale'
+        ));
+    }
 
     public function create()
     {
