@@ -41,13 +41,13 @@ class ClientController extends Controller
         $validated = $request->validate([
             'full_name' => 'required|string|min:5|max:150',
             'dni' => 'required|string|regex:/^[0-9]+$/',
-            'phone' => 'required|string',
+            'phone' => 'string|regex:/^[0-9]{4,150}$/',
         ], [
             'full_name.required' => 'El nombre completo es obligatorio.',
             'full_name.min' => 'El nombre debe tener al menos 5 caracteres.',
             'dni.required' => 'El DNI es obligatorio.',
             'dni.regex' => 'El DNI solo puede contener números.',
-            'phone.required' => 'El teléfono es obligatorio.',
+            'phone.regex' => 'El teléfono deber ser numérico y mayor a 4 numeros.',
         ]);
 
         // Buscar si el cliente ya existe por DNI

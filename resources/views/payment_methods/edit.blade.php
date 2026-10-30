@@ -336,7 +336,6 @@
         }
 
         .payment-method-edit-page .payment-method-edit-alert {
-            max-width: 760px;
             margin: 0 auto 18px;
             border-radius: 9px;
             font-size: 13px;

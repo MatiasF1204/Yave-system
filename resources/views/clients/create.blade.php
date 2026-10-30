@@ -88,7 +88,7 @@
                     {{-- Teléfono --}}
                     <div class="form-group">
                         <label for="phone" class="custom-label">
-                            Teléfono
+                            Teléfono (opcional)
                         </label>
 
                         <div class="input-wrapper">

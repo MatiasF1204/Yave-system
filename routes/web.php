@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleReportController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
+use App\Http\Controllers\StockReportController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -69,6 +70,15 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
             Route::get('/sales', [SaleReportController::class, 'index'])
                 ->name('sales');
         });
+
+        // ------------------------------------------
+        // Reporte de stock
+        // ------------------------------------------ 
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/stock', [StockReportController::class, 'index'])
+                ->name('stock');
+        });
+
 
 
         // ------------------------------------------
@@ -182,7 +192,7 @@ Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
 
         Route::get('/products', [ProductController::class, 'index'])
             ->name('products.index');
-            
+
         Route::get('/products/{product}', [ProductController::class, 'show'])
             ->name('products.show');
     });

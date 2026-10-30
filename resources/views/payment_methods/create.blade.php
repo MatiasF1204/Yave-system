@@ -54,7 +54,7 @@
                             <i class="bi bi-credit-card input-icon"></i>
                             <input type="text" name="name" id="name"
                                 class="form-control-custom @error('name') is-invalid @enderror" value="{{ old('name') }}"
-                                placeholder="Ej.: Efectivo, Transferencia, Mercado Pago" minlength="3" maxlength="100"
+                                placeholder="Ej.: Efectivo, Transferencia, Mercado Pago" minlength="2" maxlength="100"
                                 required autofocus>
                         </div>
 
@@ -349,7 +349,6 @@
         }
 
         .payment-method-create-page .payment-method-alert {
-            max-width: 900px;
             margin: 0 auto 18px;
             border-radius: 9px;
             font-size: 0.9rem;

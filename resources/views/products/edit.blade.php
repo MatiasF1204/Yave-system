@@ -69,7 +69,7 @@
                                 <i class="bi bi-boxes"></i>
                                 <input type="number" name="stock" id="stock"
                                     class="product-edit-input @error('stock') is-invalid @enderror"
-                                    value="{{ old('stock', $product->stock) }}" min="0" step="1" required>
+                                    value="{{ old('stock', $product->stock) }}" step="1" required>
                             </div>
 
                             @error('stock')
@@ -118,7 +118,7 @@
                                 <i class="bi bi-cash-stack"></i>
                                 <input type="number" name="cost" id="cost"
                                     class="product-edit-input @error('cost') is-invalid @enderror"
-                                    value="{{ old('cost', $product->cost) }}" min="0" step="0.01" required>
+                                    value="{{ old('cost', $product->cost) }}" step="0.01" required>
                             </div>
 
                             @error('cost')
@@ -136,7 +136,7 @@
                                 <i class="bi bi-truck"></i>
                                 <input type="number" name="transport_cost" id="transport_cost"
                                     class="product-edit-input @error('transport_cost') is-invalid @enderror"
-                                    value="{{ old('transport_cost', $product->transport_cost) }}" min="0"
+                                    value="{{ old('transport_cost', $product->transport_cost) }}"
                                     step="0.01" required>
                             </div>
 
@@ -155,7 +155,7 @@
                                 <i class="bi bi-tag"></i>
                                 <input type="number" name="price" id="price"
                                     class="product-edit-input @error('price') is-invalid @enderror"
-                                    value="{{ old('price', $product->price) }}" min="0" step="0.01" required>
+                                    value="{{ old('price', $product->price) }}" step="0.01" required>
                             </div>
 
                             @error('price')

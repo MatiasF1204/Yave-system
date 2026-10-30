@@ -94,9 +94,15 @@
             <span class="sidebar-section-title">Análisis</span>
 
             <a href="{{ route('admin.reports.sales') }}"
-                class="{{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                class="{{ request()->routeIs('admin.reports.sales') ? 'active' : '' }}">
                 <i class="bi bi-graph-up-arrow"></i>
                 <span>Reporte de Ventas</span>
+            </a>
+
+            <a href="{{ route('admin.reports.stock') }}"
+                class="{{ request()->routeIs('admin.reports.stock') ? 'active' : '' }}">
+                <i class="bi bi-box-seam"></i>
+                <span>Reporte de Stock</span>
             </a>
         @endif
 

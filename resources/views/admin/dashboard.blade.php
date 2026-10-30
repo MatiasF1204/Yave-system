@@ -67,7 +67,7 @@
                     </span>
                 </div>
 
-                <div class="stat-value" data-counter="{{ (int) $totalProducts }}" data-decimals="0">{{ $totalProducts }}
+                <div class="stat-value" data-counter="{{ (int) $availableProducts  }}" data-decimals="0">{{ $availableProducts }}
                 </div>
 
                 <div class="stat-description">
@@ -77,7 +77,7 @@
 
             <div class="stat-card stat-clients">
                 <div class="stat-top">
-                    <span>Clientes activos</span>
+                    <span>Clientes registrados</span>
                     <span class="stat-icon">
                         <i class="fas fa-users"></i>
                     </span>
@@ -205,7 +205,7 @@
                     @endforelse
                 </div>
 
-                <a href="{{ route('products.index') }}" class="panel-link">
+                <a href="{{ route('admin.reports.stock') }}" class="panel-link">
                     Ver productos
                     <i class="fas fa-arrow-right ms-1"></i>
                 </a>
@@ -309,134 +309,6 @@
         </section>
 
     </div>
-
-    {{-- Estilos de las animaciones --}}
-    <style>
-        .admin-dashboard .stat-card {
-            opacity: 0;
-            animation: dashboardCardEnter 0.55s ease forwards;
-            transition:
-                transform 0.25s ease,
-                box-shadow 0.25s ease,
-                border-color 0.25s ease;
-            will-change: transform;
-        }
-
-        .admin-dashboard .stat-card:nth-child(1) {
-            animation-delay: 0.05s;
-        }
-
-        .admin-dashboard .stat-card:nth-child(2) {
-            animation-delay: 0.15s;
-        }
-
-        .admin-dashboard .stat-card:nth-child(3) {
-            animation-delay: 0.25s;
-        }
-
-        .admin-dashboard .stat-card:nth-child(4) {
-            animation-delay: 0.35s;
-        }
-
-        .admin-dashboard .stat-card:hover {
-            transform: translateY(-5px) scale(1.025);
-            box-shadow: 0 12px 28px rgba(20, 43, 74, 0.16);
-            border-color: #b8cce3;
-            z-index: 2;
-        }
-
-        .admin-dashboard .stat-value,
-        .admin-dashboard .stock-summary-number {
-            font-variant-numeric: tabular-nums;
-        }
-
-        .admin-dashboard .dashboard-animate {
-            opacity: 0;
-            animation: dashboardFadeUp 0.6s ease forwards;
-        }
-
-        .admin-dashboard .dashboard-main-grid>section:nth-child(1) {
-            animation-delay: 0.2s;
-        }
-
-        .admin-dashboard .dashboard-main-grid>section:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-
-        .admin-dashboard .recent-sales-panel {
-            animation-delay: 0.4s;
-        }
-
-        .admin-dashboard .chart-bar {
-            transform: scaleY(0);
-            transform-origin: bottom;
-            animation: dashboardBarGrow 0.85s cubic-bezier(.22, 1, .36, 1) forwards;
-        }
-
-        .admin-dashboard .chart-bar-empty {
-            animation: none;
-            transform: scaleY(1);
-        }
-
-        .admin-dashboard .stock-item {
-            transition: background-color 0.2s ease, transform 0.2s ease;
-        }
-
-        .admin-dashboard .stock-item:hover {
-            background-color: #f3f7fc;
-            transform: translateX(3px);
-        }
-
-        .admin-dashboard .btn-view-sale {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .admin-dashboard .btn-view-sale:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(20, 43, 74, 0.15);
-        }
-
-        @keyframes dashboardCardEnter {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes dashboardFadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes dashboardBarGrow {
-            to {
-                transform: scaleY(1);
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-
-            .admin-dashboard *,
-            .admin-dashboard *::before,
-            .admin-dashboard *::after {
-                animation-duration: 0.01ms !important;
-                animation-delay: 0ms !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    </style>
 
     {{-- Contadores animados --}}
     <script>

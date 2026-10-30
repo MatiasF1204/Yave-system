@@ -38,6 +38,11 @@ class DashboardController extends Controller
         // Cantidad de productos y clientes (solo activos)
         $totalProducts = Product::where('status', 'active')->count();
 
+        // Productos disponibles en el catálogo (stock mayor o igual a 1)
+        $availableProducts = Product::where('status', 'active')
+            ->where('stock', '>=', 1)
+            ->count();
+
         $totalClients = Client::where('status', 'active')->count();
 
         // Productos agotados
@@ -97,6 +102,7 @@ class DashboardController extends Controller
             'totalSalesToday',
             'estimatedProfitToday',
             'totalProducts',
+            'availableProducts',
             'totalClients',
             'outOfStockCount',
             'lowStockCount',

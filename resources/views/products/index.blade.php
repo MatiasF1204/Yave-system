@@ -231,20 +231,6 @@
             {{-- Pie y paginación --}}
             @if ($products->count() > 0)
                 <div class="products-footer">
-                    <div class="results-info">
-                        @if (method_exists($products, 'firstItem') && $products->firstItem())
-                            Mostrando
-                            <strong>{{ $products->firstItem() }}</strong>
-                            a
-                            <strong>{{ $products->lastItem() }}</strong>
-                            de
-                            <strong>{{ $products->total() }}</strong>
-                            productos
-                        @else
-                            <strong>{{ $products->count() }}</strong> producto(s)
-                        @endif
-                    </div>
-
                     @if (method_exists($products, 'hasPages') && $products->hasPages())
                         <div class="products-pagination">
                             {{ $products->withQueryString()->links() }}
