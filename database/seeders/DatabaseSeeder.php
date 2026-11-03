@@ -21,5 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call([PaymentMethodSeeder::class]);
         // Crea productos en la bd
         $this->call([ProductSeeder::class]);
+        // Para las ventas
+        $this->call([SaleSeeder::class]);
     }
 }

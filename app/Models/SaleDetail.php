@@ -13,7 +13,11 @@ class SaleDetail extends Model
         'sale_id',
         'product_id',
         'quantity',
+        'unit_cost',
+        'unit_transport_cost',
+        'unit_total_cost',
         'unit_price',
+        'unit_profit',
         'subtotal',
     ];
 
@@ -21,7 +25,11 @@ class SaleDetail extends Model
     {
         return [
             'quantity' => 'integer',
+            'unit_cost' => 'decimal:2',
+            'unit_transport_cost' => 'decimal:2',
+            'unit_total_cost' => 'decimal:2',
             'unit_price' => 'decimal:2',
+            'unit_profit' => 'decimal:2',
             'subtotal' => 'decimal:2',
         ];
     }

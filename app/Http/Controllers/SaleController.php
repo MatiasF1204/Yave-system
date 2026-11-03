@@ -81,7 +81,6 @@ class SaleController extends Controller
         return view('sale.index', compact('sales', 'users', 'paymentMethods'));
     }
 
-
     // Muestra formulario para registrar una venta
     public function create()
     {
@@ -126,11 +125,12 @@ class SaleController extends Controller
     }
 
     // Guardar una venta con sus productos y pagos
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'client_id' => [
-                'required',
+                'nullable',
                 'integer',
                 'exists:clients,id',
             ],
@@ -185,7 +185,7 @@ class SaleController extends Controller
             $total = 0;
             $details = [];
 
-            // Verificar el stock y calcular los importes
+            // Verificar el stock y obtener los valores económicos del producto.
             foreach ($validated['products'] as $item) {
                 $product = Product::whereKey($item['product_id'])
                     ->lockForUpdate()
@@ -205,22 +205,31 @@ class SaleController extends Controller
                     ]);
                 }
 
-                // El precio se toma de la base de datos,
-                // nunca del importe enviado por el formulario
+                // Copiar los valores económicos actuales del producto.
+                $unitCost = (float) $product->cost;
+                $unitTransportCost = (float) $product->transport_cost;
+                $unitTotalCost = (float) $product->total_cost;
                 $unitPrice = (float) $product->price;
+                $unitProfit = (float) $product->profit;
 
+                // Calcular el subtotal de venta.
                 $subtotal = round($unitPrice * $quantity, 2);
                 $total = round($total + $subtotal, 2);
 
+                // Preparar los datos históricos del detalle.
                 $details[] = [
                     'product' => $product,
                     'quantity' => $quantity,
+                    'unit_cost' => $unitCost,
+                    'unit_transport_cost' => $unitTransportCost,
+                    'unit_total_cost' => $unitTotalCost,
                     'unit_price' => $unitPrice,
+                    'unit_profit' => $unitProfit,
                     'subtotal' => $subtotal,
                 ];
             }
 
-            // Comprobar que los métodos de pago estén activos y que la suma de los pagos coincida con el total
+            // Comprobar los medios de pago y sus importes.
             $paymentTotal = 0;
             $payments = [];
 
@@ -250,11 +259,9 @@ class SaleController extends Controller
                 ]);
             }
 
-            /*
-             * Crear la venta principal.
-             */
+            // Crear la venta principal.
             $sale = Sale::create([
-                'client_id' => $validated['client_id'],
+                'client_id' => $validated['client_id'] ?? null,
                 'user_id' => $request->user()->id,
                 'total' => $total,
                 'observations' => $validated['observations'] ?? null,
@@ -262,14 +269,16 @@ class SaleController extends Controller
                 'status' => 'active',
             ]);
 
-            /*
-             * Registrar los productos y descontar el stock.
-             */
+            // Registrar los productos y descontar el stock.
             foreach ($details as $detail) {
                 $sale->details()->create([
                     'product_id' => $detail['product']->id,
                     'quantity' => $detail['quantity'],
+                    'unit_cost' => $detail['unit_cost'],
+                    'unit_transport_cost' => $detail['unit_transport_cost'],
+                    'unit_total_cost' => $detail['unit_total_cost'],
                     'unit_price' => $detail['unit_price'],
+                    'unit_profit' => $detail['unit_profit'],
                     'subtotal' => $detail['subtotal'],
                 ]);
 
@@ -279,9 +288,7 @@ class SaleController extends Controller
                 );
             }
 
-            /*
-             * Registrar todos los medios de pago.
-             */
+            // Registrar todos los medios de pago.
             foreach ($payments as $payment) {
                 $sale->payments()->create($payment);
             }
@@ -293,6 +300,7 @@ class SaleController extends Controller
             ->route('sales.show', $sale->sale_id)
             ->with('success', 'La venta se registró correctamente.');
     }
+
 
     // Mostrar el detalle de una venta.
     public function show(Sale $sale)

@@ -24,7 +24,17 @@ return new class extends Migration
 
             // Información del producto vendido
             $table->unsignedInteger('quantity');
+
+            // Copia histórica de los costos y ganancias
+            $table->decimal('unit_cost', 10, 2);
+            $table->decimal('unit_transport_cost', 10, 2);
+            $table->decimal('unit_total_cost', 10, 2);
+
+            // Precio y ganancia al momento de la venta
             $table->decimal('unit_price', 10, 2);
+            $table->decimal('unit_profit', 10, 2);
+
+            // Importe total de las unidades vendidas
             $table->decimal('subtotal', 12, 2);
 
             $table->timestamps();

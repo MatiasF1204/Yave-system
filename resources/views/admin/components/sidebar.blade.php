@@ -87,6 +87,13 @@
             <span>Gestión de Ventas</span>
         </a>
 
+        {{-- Control diario --}}
+        <a href="{{ route('daily-control.index') }}"
+            class="{{ request()->routeIs('daily-control.index') ? 'active' : '' }}">
+            <i class="bi bi-clipboard-data"></i>
+            <span>Control diario de caja</span>
+        </a>
+
         {{-- Reportes: solamente administrador --}}
         @if (auth()->user()->role?->name === 'Administrador')
             <div class="sidebar-divider"></div>

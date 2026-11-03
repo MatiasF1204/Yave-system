@@ -122,48 +122,92 @@
                 <div class="report-section-icon">
                     <i class="fas fa-chart-bar"></i>
                 </div>
+
                 <div>
-                    <h2>Evolución de las ventas</h2>
-                    <p>Importe vendido por día en el período seleccionado.</p>
+                    <h2>Evolución de ventas y ganancias</h2>
+                    <p>Comparación diaria del importe vendido y la ganancia obtenida durante el mes.</p>
                 </div>
             </div>
 
             @php
                 $maxAmount = max(1, (float) $salesChart->max('amount'));
+                $maxProfit = max(1, (float) $salesChart->max('profit'));
             @endphp
 
-            <div class="report-chart">
-                @foreach ($salesChart as $index => $day)
-                    @php
-                        $barHeight = $day['amount'] > 0 ? max(4, ($day['amount'] / $maxAmount) * 100) : 0;
-                    @endphp
+            {{-- Gráfico comparativo --}}
+            <div class="sales-comparison-wrapper">
 
-                    <div class="report-chart-column">
-                        <div class="report-chart-bar-area">
-                            @if ($day['amount'] > 0)
-                                <div class="report-chart-tooltip">
-                                    ${{ number_format($day['amount'], 2, ',', '.') }}
-                                    <small>
-                                        {{ $day['quantity'] }}
-                                        {{ $day['quantity'] === 1 ? 'venta' : 'ventas' }}
-                                    </small>
+                <div class="sales-comparison-chart">
+                    @foreach ($salesChart as $index => $day)
+                        @php
+                            $salesHeight = $day['amount'] > 0 ? max(3, ($day['amount'] / $maxAmount) * 100) : 0;
+
+                            $profitHeight = $day['profit'] > 0 ? max(3, ($day['profit'] / $maxProfit) * 100) : 0;
+                        @endphp
+
+                        <div class="sales-comparison-column" tabindex="0" role="button"
+                            aria-label="Consultar información del día {{ $day['date'] }}" data-date="{{ $day['date'] }}"
+                            data-sales="{{ number_format($day['amount'], 2, ',', '.') }}"
+                            data-profit="{{ number_format($day['profit'], 2, ',', '.') }}"
+                            data-quantity="{{ $day['quantity'] }}">
+
+                            <div class="sales-comparison-bars">
+                                <div class="sales-comparison-bar bar-sales {{ $day['amount'] <= 0 ? 'bar-empty' : '' }}"
+                                    style="height: {{ $salesHeight }}%; animation-delay: {{ min($index * 0.025, 0.8) }}s;">
                                 </div>
-                            @endif
 
-                            <div class="report-chart-bar {{ $day['amount'] <= 0 ? 'bar-empty' : '' }}"
-                                style="height: {{ $barHeight }}%; animation-delay: {{ min($index * 0.025, 0.8) }}s;"
-                                title="{{ $day['date'] }}"></div>
+                                <div class="sales-comparison-bar bar-profit {{ $day['profit'] <= 0 ? 'bar-empty' : '' }}"
+                                    style="height: {{ $profitHeight }}%; animation-delay: {{ min($index * 0.025, 0.8) }}s;">
+                                </div>
+                            </div>
+
+                            <span class="sales-comparison-label">
+                                {{ $day['label'] }}
+                            </span>
                         </div>
+                    @endforeach
+                </div>
+            </div>
 
-                        <span class="report-chart-label">{{ $day['label'] }}</span>
+            {{-- Información dinámica: fuera del área del gráfico para evitar recortes --}}
+            <div class="sales-comparison-detail" id="salesComparisonDetail" aria-live="polite">
+                <div class="comparison-detail-heading">
+                    <i class="fas fa-calendar-day"></i>
+                    <strong id="comparisonDate">Seleccioná un día del gráfico</strong>
+                </div>
+
+                <div class="comparison-detail-values">
+                    <div class="comparison-detail-item">
+                        <span class="comparison-detail-dot dot-sales"></span>
+                        <div>
+                            <small>Total vendido</small>
+                            <strong id="comparisonSales">$0,00</strong>
+                        </div>
                     </div>
-                @endforeach
+
+                    <div class="comparison-detail-item">
+                        <span class="comparison-detail-dot dot-profit"></span>
+                        <div>
+                            <small>Ganancia del día</small>
+                            <strong id="comparisonProfit">$0,00</strong>
+                        </div>
+                    </div>
+
+                    <div class="comparison-detail-item">
+                        <span class="comparison-detail-dot dot-quantity"></span>
+                        <div>
+                            <small>Operaciones</small>
+                            <strong id="comparisonQuantity">0 ventas</strong>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="report-chart-legend">
-                <span></span>
-                Importe de ventas activas
-            </div>
+            <p class="report-note">
+                <i class="fas fa-info-circle me-1"></i>
+                Las ganancias se calculan utilizando los costos históricos registrados
+                en cada detalle de venta. Los días sin operaciones muestran valores en cero.
+            </p>
         </section>
 
         {{-- MEDIOS DE PAGO --}}
@@ -310,15 +354,19 @@
                             <th>N.º</th>
                             <th>Fecha</th>
                             <th>Cliente</th>
-                            <th>Vendedor</th>
-                            <th class="text-end">Total</th>
-                            <th class="text-center">Estado</th>
-                            <th class="text-center">Detalle</th>
+                            <th>Total</th>
+                            <th>Ganancia</th>
+                            <th>Estado</th>
+                            <th>Detalle</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         @forelse ($sales as $sale)
+                            @php
+                                $saleProfit = $sale->details->sum(function ($detail) {
+                                    return (float) ($detail->unit_profit ?? 0) * (int) $detail->quantity;
+                                });
+                            @endphp
                             <tr>
                                 <td>
                                     <span class="report-sale-number">
@@ -335,11 +383,19 @@
                                     </small>
                                 </td>
 
-                                <td>{{ $sale->client->full_name ?? 'Cliente no registrado' }}</td>
-                                <td>{{ $sale->user->name ?? 'Sin vendedor' }}</td>
+                                <td>{{ $sale->client->full_name ?? 'Consumidor Final' }}</td>
 
-                                <td class="text-end report-sale-total">
+
+                                <td class="report-sale-total">
                                     ${{ number_format((float) $sale->total, 2, ',', '.') }}
+                                </td>
+
+                                <td class="report-sale-profit">
+                                    @if ($sale->status === 'active')
+                                        ${{ number_format($saleProfit, 2, ',', '.') }}
+                                    @else
+                                        <span class="text-muted">—</span>
+                                    @endif
                                 </td>
 
                                 <td class="text-center">
@@ -423,6 +479,43 @@
                     }
                 });
             }
+        });
+
+        // Interactividad para la tabla de reportes de venta de cada día
+        document.addEventListener('DOMContentLoaded', function() {
+            const columns = document.querySelectorAll('.sales-comparison-column');
+
+            const dateElement = document.getElementById('comparisonDate');
+            const salesElement = document.getElementById('comparisonSales');
+            const profitElement = document.getElementById('comparisonProfit');
+            const quantityElement = document.getElementById('comparisonQuantity');
+
+            function showDayDetails(column) {
+                const date = column.dataset.date;
+                const sales = column.dataset.sales;
+                const profit = column.dataset.profit;
+                const quantity = parseInt(column.dataset.quantity, 10) || 0;
+
+                dateElement.textContent = date;
+                salesElement.textContent = '$' + sales;
+                profitElement.textContent = '$' + profit;
+                quantityElement.textContent =
+                    quantity + (quantity === 1 ? ' venta' : ' ventas');
+            }
+
+            columns.forEach(function(column) {
+                column.addEventListener('mouseenter', function() {
+                    showDayDetails(this);
+                });
+
+                column.addEventListener('focus', function() {
+                    showDayDetails(this);
+                });
+
+                column.addEventListener('click', function() {
+                    showDayDetails(this);
+                });
+            });
         });
     </script>
 @endsection

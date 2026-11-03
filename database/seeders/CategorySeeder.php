@@ -14,7 +14,12 @@ class CategorySeeder extends Seeder
             'Desinfectantes',
             'Detergentes',
             'Aromatizantes',
-            'Suavizantes'
+            'Suavizantes',
+            'Lavandinas',
+            'Limpiadores de pisos',
+            'Desengrasantes',
+            'Jabones líquidos',
+            'Accesorios de limpieza',
         ];
 
         foreach ($categories as $name) {

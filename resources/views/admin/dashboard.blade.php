@@ -266,7 +266,7 @@
                                     </small>
                                 </td>
 
-                                <td>{{ $sale->client->full_name ?? 'Sin cliente' }}</td>
+                                <td>{{ $sale->client->full_name ?? 'Consumidor Final' }}</td>
 
                                 <td>{{ $sale->user->name ?? 'Sin vendedor' }}</td>
 

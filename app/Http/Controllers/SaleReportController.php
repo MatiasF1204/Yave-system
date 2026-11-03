@@ -31,11 +31,11 @@ class SaleReportController extends Controller
         $startDate = Carbon::parse($from)->startOfDay();
         $endDate = Carbon::parse($to)->endOfDay();
 
-        // Todas las ventas del período, incluidas las anuladas.
+        // Todas las ventas del período, incluidas las anuladas
         $salesQuery = Sale::query()
             ->whereBetween('sale_date', [$startDate, $endDate]);
 
-        // Solo ventas activas para los cálculos comerciales.
+        // Solo ventas activas para los cálculos comerciales
         $activeSalesQuery = (clone $salesQuery)
             ->where('status', 'active');
 
@@ -51,32 +51,17 @@ class SaleReportController extends Controller
             ->where('status', 'cancelled')
             ->count();
 
-        // Ganancia estimada con el costo actual del producto.
+        // Ganancia estimada
         $estimatedProfit = (float) DB::table('sale_details as sd')
             ->join('sales as s', 's.sale_id', '=', 'sd.sale_id')
-            ->join('products as p', 'p.id', '=', 'sd.product_id')
             ->where('s.status', 'active')
             ->whereBetween('s.sale_date', [$startDate, $endDate])
             ->selectRaw(
-                'COALESCE(
-                    SUM(
-                        (sd.unit_price - COALESCE(p.total_cost, 0))
-                        * sd.quantity
-                    ),
-                    0
-                ) as profit'
+                'COALESCE(SUM(sd.unit_profit * sd.quantity), 0) as profit'
             )
             ->value('profit');
 
-        /*
-         * MEDIOS DE PAGO
-         *
-         * Se utiliza la relación existente:
-         * Sale -> payments -> paymentMethod.
-         *
-         * Se cuentan los pagos registrados y las ventas distintas
-         * que utilizaron cada medio de pago.
-         */
+        // MEDIOS DE PAGO
         $activeSalesWithPayments = (clone $activeSalesQuery)
             ->with('payments.paymentMethod')
             ->get();
@@ -127,20 +112,14 @@ class SaleReportController extends Controller
             return $item;
         });
 
-        /*
-         * TOP 3 DE CLIENTES
-         *
-         * Ordenados por importe total comprado, de mayor a menor.
-         * Las ventas sin client_id quedan agrupadas como
-         * "Cliente no registrado".
-         */
+        // TOP 3 DE CLIENTES
         $topClients = DB::table('sales as s')
             ->leftJoin('clients as c', 'c.id', '=', 's.client_id')
             ->where('s.status', 'active')
             ->whereBetween('s.sale_date', [$startDate, $endDate])
             ->selectRaw(
                 "s.client_id,
-                 COALESCE(c.full_name, 'Cliente no registrado') as customer_name,
+                 COALESCE(c.full_name, 'Consumidor Final') as customer_name,
                  COUNT(s.sale_id) as purchases_count,
                  SUM(s.total) as total_spent"
             )
@@ -150,19 +129,30 @@ class SaleReportController extends Controller
             ->limit(3)
             ->get();
 
-        /*
-         * EVOLUCIÓN DIARIA
-         */
-        $dailySales = (clone $activeSalesQuery)
-            ->selectRaw('DATE(sale_date) as day')
+        // EVOLUCIÓN DIARIA: ventas y ganancias históricas
+        $dailyProfitBySale = DB::table('sale_details')
+            ->selectRaw(
+                'sale_id, COALESCE(SUM(COALESCE(unit_profit, 0) * quantity), 0) as profit'
+            )
+            ->groupBy('sale_id');
+
+        $dailySales = DB::table('sales as s')
+            ->leftJoinSub($dailyProfitBySale, 'dp', function ($join) {
+                $join->on('dp.sale_id', '=', 's.sale_id');
+            })
+            ->where('s.status', 'active')
+            ->whereBetween('s.sale_date', [$startDate, $endDate])
+            ->selectRaw('DATE(s.sale_date) as day')
             ->selectRaw('COUNT(*) as quantity')
-            ->selectRaw('SUM(total) as amount')
-            ->groupByRaw('DATE(sale_date)')
+            ->selectRaw('COALESCE(SUM(s.total), 0) as amount')
+            ->selectRaw('COALESCE(SUM(dp.profit), 0) as profit')
+            ->groupByRaw('DATE(s.sale_date)')
             ->orderBy('day')
             ->get()
             ->keyBy('day');
 
         $salesChart = collect();
+
         $currentDate = Carbon::parse($from)->startOfDay();
         $lastDate = Carbon::parse($to)->startOfDay();
 
@@ -175,19 +165,15 @@ class SaleReportController extends Controller
                 'date' => $dayKey,
                 'quantity' => (int) ($day->quantity ?? 0),
                 'amount' => (float) ($day->amount ?? 0),
+                'profit' => (float) ($day->profit ?? 0),
             ]);
 
             $currentDate->addDay();
         }
 
-        /*
-         * HISTORIAL COMPLETO
-         *
-         * Se muestran 10 ventas por página.
-         * La paginación conserva los filtros de fechas.
-         */
+        // HISTORIAL COMPLETO
         $sales = (clone $salesQuery)
-            ->with(['client', 'user'])
+            ->with(['client', 'user', 'details'])
             ->orderByDesc('sale_date')
             ->orderByDesc('sale_id')
             ->paginate(10)

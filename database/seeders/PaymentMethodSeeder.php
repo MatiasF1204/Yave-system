@@ -16,6 +16,8 @@ class PaymentMethodSeeder extends Seeder
             ['name' => 'Efectivo', 'status' => 'active'],
             ['name' => 'Transferencia', 'status' => 'active'],
             ['name' => 'Cuotas con Mercado Pago', 'status' => 'active'],
+            ['name' => 'QR Débito', 'status' => 'active'],
+            ['name' => 'QR Crédito 1 Pago', 'status' => 'active'],
         ];
 
         foreach ($methods as $method) {

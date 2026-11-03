@@ -27,19 +27,19 @@ class UserSeeder extends Seeder
         // Crea un array de usuarios vendedores
         $sellers = [
             [
-                'name' => 'María Gómez',
-                'email' => 'vendedor@yave.com',
-                'password' => 'vendedor1234',
+                'name' => 'Maria Gómez',
+                'email' => 'maria@yave.com',
+                'password' => 'maria1234',
             ],
             [
                 'name' => 'Lucas Fernández',
-                'email' => 'vendedor2@yave.com',
-                'password' => 'vendedor1234',
+                'email' => 'lucas@yave.com',
+                'password' => 'lucas1234',
             ],
             [
                 'name' => 'Sofía Martínez',
-                'email' => 'vendedor3@yave.com',
-                'password' => 'vendedor1234',
+                'email' => 'sofia@yave.com',
+                'password' => 'sofia1234',
             ],
         ];
 

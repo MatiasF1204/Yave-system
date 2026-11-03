@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DailyControlController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleReportController;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // ==========================================
-// PÁGINA DE BIENVENIDA
+// Inicio de sesión
 // ==========================================
 
 Route::get('/', function () {
@@ -56,35 +57,24 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
     ->name('admin.')
     ->group(function () {
 
-        // ------------------------------------------
         // Dashboard
-        // ------------------------------------------
-
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
 
-        // ------------------------------------------
         // Reporte de ventas
-        // ------------------------------------------
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/sales', [SaleReportController::class, 'index'])
                 ->name('sales');
         });
 
-        // ------------------------------------------
         // Reporte de stock
-        // ------------------------------------------ 
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/stock', [StockReportController::class, 'index'])
                 ->name('stock');
         });
 
 
-
-        // ------------------------------------------
         // Gestión de Usuarios
-        // ------------------------------------------
-
         Route::get('/users', [UserController::class, 'index'])
             ->name('users.index');
 
@@ -107,10 +97,7 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
             ->name('users.activate');
 
 
-        // ------------------------------------------
         // Gestión de Categorías
-        // ------------------------------------------
-
         Route::get('/categories', [CategoryController::class, 'index'])
             ->name('categories.index');
 
@@ -133,10 +120,7 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
             ->name('categories.activate');
 
 
-        // ------------------------------------------
         // Gestión de Métodos de Pago
-        // ------------------------------------------
-
         Route::get('/payment-methods', [PaymentMethodController::class, 'index'])
             ->name('payment_methods.index');
 
@@ -159,10 +143,7 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
             ->name('payment_methods.activate');
 
 
-        // ------------------------------------------
         // Gestión de Productos
-        // ------------------------------------------
-
         Route::get('/products/create', [ProductController::class, 'create'])
             ->name('products.create');
 
@@ -184,17 +165,22 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
 
 
 // ==========================================
-// PRODUCTOS - ADMINISTRADOR Y VENDEDOR
+// RUTAS ADMINISTRADOR Y VENDEDOR
 // ==========================================
 
 Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
     ->group(function () {
 
+        // Ver los productos
         Route::get('/products', [ProductController::class, 'index'])
             ->name('products.index');
 
         Route::get('/products/{product}', [ProductController::class, 'show'])
             ->name('products.show');
+
+        // Control diarío de caja
+        Route::get('/control-diario', [DailyControlController::class, 'index'])
+            ->name('daily-control.index');
     });
 
 

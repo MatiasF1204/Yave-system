@@ -15,8 +15,9 @@ return new class extends Migration
 
             // Relaciones
             $table->foreignId('client_id')
+                ->nullable()
                 ->constrained('clients', 'id')
-                ->restrictOnDelete();
+                ->nullOnDelete();
 
             $table->foreignId('user_id')
                 ->constrained('users', 'id')

@@ -44,7 +44,7 @@
                         {{-- BUSCAR CLIENTE --}}
                         <div>
                             <label for="client-dni" class="mb-2 block text-base font-bold text-slate-800">
-                                Buscar cliente por DNI <span class="text-red-600">*</span>
+                                Buscar cliente por DNI 
                             </label>
 
                             <div class="flex">
@@ -941,12 +941,6 @@
                 const productRows = Array.from(
                     productsBody.querySelectorAll('[data-product-row]')
                 );
-
-                // Validar cliente
-                if (!clientId.value) {
-                    errors.push('Buscá y seleccioná un cliente antes de continuar.');
-                    setClientFeedback('Buscá y seleccioná un cliente antes de continuar.');
-                }
 
                 // Validar productos y cantidades
                 const invalidProducts = !productRows.length || productRows.some(function(row) {

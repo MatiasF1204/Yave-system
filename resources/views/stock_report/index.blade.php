@@ -414,17 +414,6 @@
 
                 requestAnimationFrame(animateCounter);
             });
-
-            // Enviar el formulario al cambiar filtros de selección.
-            const filterForm = document.querySelector('.stock-filters');
-
-            if (filterForm) {
-                filterForm.querySelectorAll('select').forEach(function(select) {
-                    select.addEventListener('change', function() {
-                        filterForm.requestSubmit();
-                    });
-                });
-            }
         });
     </script>
 @endsection

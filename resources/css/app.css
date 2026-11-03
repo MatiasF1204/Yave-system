@@ -262,7 +262,7 @@ body.sidebar-collapsed .sidebar a {
 .sidebar-brand h2 {
     margin: 0;
     color: #fff;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     line-height: 1.3;
     letter-spacing: -0.35px;
@@ -557,7 +557,7 @@ body.sidebar-collapsed .sidebar a {
     --text: #26384d;
 
     color: var(--text);
-    font-size: 0.95rem;
+    font-size: 1.1rem;
 }
 
 /* Encabezado */
@@ -3980,6 +3980,215 @@ ESTILOS EXCLUSIVOS DE PRODUCTOS (index.blade.php de products)
     background: var(--report-blue);
 }
 
+/* ========================================
+   GRÁFICO COMPARATIVO: VENTAS Y GANANCIAS
+======================================== */
+
+.sales-report .sales-comparison-wrapper {
+    width: 100%;
+    padding: 25px 15px 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: #f8fafd;
+    border: 1px solid #e1e8f0;
+    border-radius: 12px;
+}
+
+.sales-report .sales-comparison-chart {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 5px;
+    min-width: 650px;
+    height: 230px;
+}
+
+.sales-report .sales-comparison-column {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    cursor: pointer;
+    border-radius: 6px;
+    outline: none;
+}
+
+.sales-report .sales-comparison-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3px;
+    width: 100%;
+    height: 190px;
+    padding: 0 2px;
+    border-bottom: 1px solid #cbd6e3;
+}
+
+.sales-report .sales-comparison-bar {
+    width: 42%;
+    max-width: 17px;
+    min-height: 0;
+    border-radius: 4px 4px 0 0;
+    transition:
+        filter 0.2s ease,
+        opacity 0.2s ease;
+    animation: comparisonBarGrow 0.6s ease backwards;
+    transform-origin: bottom;
+}
+
+.sales-report .bar-sales {
+    background: linear-gradient(180deg, #5b9bea, #285d91);
+}
+
+.sales-report .bar-profit {
+    background: linear-gradient(180deg, #51d5a2, #218653);
+}
+
+.sales-report .bar-empty {
+    opacity: 0.13;
+}
+
+.sales-report .sales-comparison-column:hover .sales-comparison-bar,
+.sales-report .sales-comparison-column:focus .sales-comparison-bar {
+    filter: brightness(1.13);
+}
+
+.sales-report .sales-comparison-column:focus-visible {
+    outline: 2px solid #285d91;
+    outline-offset: 3px;
+}
+
+.sales-report .sales-comparison-label {
+    margin-top: 9px;
+    color: #68798e;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@keyframes comparisonBarGrow {
+    from {
+        transform: scaleY(0);
+    }
+
+    to {
+        transform: scaleY(1);
+    }
+}
+
+/* Información del día seleccionado */
+
+.sales-report .sales-comparison-detail {
+    margin-top: 18px;
+    padding: 17px 20px;
+    background: #fff;
+    border: 1px solid #dce5ef;
+    border-radius: 11px;
+    box-shadow: 0 3px 10px rgba(25, 48, 75, 0.04);
+}
+
+.sales-report .comparison-detail-heading {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 15px;
+    color: #263f5e;
+    font-size: 14px;
+}
+
+.sales-report .comparison-detail-heading i {
+    color: #4385df;
+}
+
+.sales-report .comparison-detail-values {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.sales-report .comparison-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 12px;
+    background: #f8fafd;
+    border-radius: 8px;
+}
+
+.sales-report .comparison-detail-item > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.sales-report .comparison-detail-item small {
+    color: #718096;
+    font-size: 12px;
+}
+
+.sales-report .comparison-detail-item strong {
+    color: #26384d;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.sales-report .comparison-detail-dot {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+    border-radius: 3px;
+}
+
+.sales-report .dot-sales {
+    background: #4385df;
+}
+
+.sales-report .dot-profit {
+    background: #35bd8c;
+}
+
+.sales-report .dot-quantity {
+    background: #8795a8;
+}
+
+/* Leyenda */
+
+.sales-report .sales-comparison-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin: 18px 0 25px;
+}
+
+.sales-report .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #52647a;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.sales-report .legend-color {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+}
+
+.sales-report .legend-sales {
+    background: #4385df;
+}
+
+.sales-report .legend-profit {
+    background: #35bd8c;
+}
+
 /* Medios de pago */
 .sales-report .payment-summary {
     display: grid;
@@ -4190,7 +4399,7 @@ ESTILOS EXCLUSIVOS DE PRODUCTOS (index.blade.php de products)
 .sales-report .report-section-heading-left {
     display: flex;
     align-items: center;
-    gap: 13px;
+    gap: 10px;
 }
 
 .sales-report .report-record-count {
@@ -4204,7 +4413,7 @@ ESTILOS EXCLUSIVOS DE PRODUCTOS (index.blade.php de products)
 
 .sales-report .report-table {
     min-width: 780px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .sales-report .report-table thead th {
@@ -4212,14 +4421,17 @@ ESTILOS EXCLUSIVOS DE PRODUCTOS (index.blade.php de products)
     border: 0;
     background: #263f5e;
     color: white;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 700;
     white-space: nowrap;
+    text-align: center;
+    width: 5%;
 }
 
 .sales-report .report-table tbody td {
     padding: 14px 13px;
-    border-color: #e8edf3;
+    border-color: #093b78;
+    text-align: center;
 }
 
 .sales-report .report-table tbody tr:nth-child(even) {
@@ -4423,12 +4635,6 @@ ESTILOS EXCLUSIVOS DE PRODUCTOS (index.blade.php de products)
 }
 
 /* ESTILOS DEL REPORTE DE STOCK ---------------------------------------------- */
-
-/* ==========================================
-   REPORTE DE STOCK
-   Estilos aislados de esta vista
-========================================== */
-
 .stock-report {
     --stock-navy: #142b4a;
     --stock-navy-light: #1d416b;
@@ -5357,5 +5563,290 @@ ESTILOS EXCLUSIVOS DE PRODUCTOS (index.blade.php de products)
     .stock-level__bar {
         animation: none !important;
         transition: none !important;
+    }
+}
+
+/* ESTILOS DEL CONTROL DIARIO DE CAJA */
+
+.daily-sheet {
+    width: 100%;
+    margin: 0 auto;
+    color: #263445;
+    font-size: 18px;
+}
+
+/* Encabezado */
+.sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    background: #fff;
+    border: 1px solid #dce3eb;
+    border-radius: 8px;
+}
+
+.sheet-header h2 {
+    margin: 0 0 5px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #24364b;
+}
+
+.sheet-header p {
+    margin: 0;
+    color: #788596;
+    font-size: 16px;
+}
+
+.sheet-date {
+    min-width: 150px;
+    padding-left: 20px;
+    border-left: 1px solid #e2e7ed;
+    text-align: right;
+}
+
+.sheet-date span {
+    display: block;
+    margin-bottom: 5px;
+    color: #8793a1;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.sheet-date strong {
+    color: #263d58;
+    font-size: 19px;
+}
+
+/* Filtros */
+.sheet-filters {
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    background: #f7f9fc;
+    border: 1px solid #dce3eb;
+    border-radius: 8px;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 190px;
+}
+
+.filter-field label {
+    color: #536477;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.filter-field input,
+.filter-field select {
+    height: 37px;
+    padding: 0 10px;
+    color: #34465a;
+    background: #fff;
+    border: 1px solid #d5dde6;
+    border-radius: 5px;
+    outline: none;
+}
+
+.filter-field input:focus,
+.filter-field select:focus {
+    border-color: #668dbb;
+    box-shadow: 0 0 0 2px rgba(66, 133, 200, .1);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-sheet-primary,
+.btn-sheet-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 37px;
+    padding: 0 14px;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-sheet-primary {
+    color: #fff;
+    background: #315d8c;
+    border: 1px solid #315d8c;
+}
+
+.btn-sheet-primary:hover {
+    background: #244b75;
+    color: #fff;
+}
+
+.btn-sheet-light {
+    color: #536477;
+    background: #fff;
+    border: 1px solid #d5dde6;
+}
+
+.btn-sheet-light:hover {
+    background: #edf2f7;
+    color: #263d58;
+}
+
+/* Secciones */
+.sheet-section {
+    margin-bottom: 22px;
+    padding: 0;
+    background: #fff;
+    border: 1px solid #dce3eb;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 17px;
+    background: #f5f7fa;
+    border-bottom: 1px solid #dce3eb;
+}
+
+.section-heading span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    color: #315d8c;
+    background: #e5edf6;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.section-heading h5 {
+    margin: 0;
+    color: #34465a;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* Tablas */
+.sheet-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+.sheet-table th {
+    padding: 11px 17px;
+    color: #647386;
+    background: #fafbfd;
+    border-bottom: 1px solid #e2e7ed;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .35px;
+}
+
+.sheet-table td {
+    padding: 11px 17px;
+    color: #465568;
+    border-bottom: 1px solid #edf0f3;
+    font-size: 16px;
+}
+
+.sheet-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.sheet-table tbody tr:hover:not(.sheet-total) {
+    background: #f8fafc;
+}
+
+.sheet-table td:first-child i {
+    margin-right: 7px;
+    color: #8091a4;
+}
+
+.sheet-total td {
+    color: #263d58;
+    background: #f1f5f9;
+    border-top: 1px solid #dce3eb;
+    font-weight: 700;
+}
+
+.sheet-empty {
+    padding: 20px !important;
+    color: #8793a1 !important;
+    text-align: center;
+}
+
+/* Pie */
+.sheet-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 4px;
+    color: #929dab;
+    font-size: 13px;
+    border-top: 1px solid #e1e6ec;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sheet-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .sheet-date {
+        width: 100%;
+        padding: 10px 0 0;
+        border-left: none;
+        border-top: 1px solid #e2e7ed;
+        text-align: left;
+    }
+
+    .sheet-filters {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .filter-field {
+        width: 100%;
+    }
+
+    .filter-actions {
+        width: 100%;
+    }
+
+    .filter-actions button,
+    .filter-actions a {
+        flex: 1;
+    }
+
+    .sheet-table {
+        min-width: 500px;
+    }
+
+    .sheet-footer {
+        flex-direction: column;
     }
 }

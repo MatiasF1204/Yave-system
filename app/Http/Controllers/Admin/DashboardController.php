@@ -24,16 +24,16 @@ class DashboardController extends Controller
             ->whereDate('sale_date', $today)
             ->sum('total');
 
-        // Ganancia estimada
+        // Ganancia estimada del día
         $estimatedProfitToday = (float) DB::table('sale_details as sd')
             ->join('sales as s', 's.sale_id', '=', 'sd.sale_id')
-            ->join('products as p', 'p.id', '=', 'sd.product_id')
             ->where('s.status', 'active')
             ->whereDate('s.sale_date', $today)
             ->selectRaw(
-                'COALESCE(SUM((sd.unit_price - COALESCE(p.total_cost, 0)) * sd.quantity), 0) as profit'
+                'COALESCE(SUM(COALESCE(sd.unit_profit, 0) * sd.quantity), 0) as profit'
             )
             ->value('profit');
+
 
         // Cantidad de productos y clientes (solo activos)
         $totalProducts = Product::where('status', 'active')->count();
@@ -50,17 +50,17 @@ class DashboardController extends Controller
             ->where('stock', '<=', 0)
             ->count();
 
-        // Productos con stock bajo (1 a 3 unidades)
+        // Productos con stock bajo (1 a 5 unidades)
         $lowStockCount = Product::where('status', 'active')
-            ->whereBetween('stock', [1, 3])
+            ->whereBetween('stock', [1, 5])
             ->count();
 
         // Listado de productos que requieren atención
         $lowStockProducts = Product::where('status', 'active')
-            ->where('stock', '<=', 3)
+            ->where('stock', '<=', 5)
             ->orderBy('stock')
             ->orderBy('name')
-            ->limit(6)
+            ->limit(2)
             ->get();
 
         // Ventas de los últimos 7 días, excluyendo las anuladas.

@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="container-fluid sales-page p-0">
-
         {{-- Encabezado --}}
         <div class="page-heading mb-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -107,8 +106,6 @@
                             </select>
                         </div>
 
-                        {{-- SEGUNDA FILA --}}
-
                         {{-- Fecha desde --}}
                         <div class="col-12 col-sm-6 col-lg-3">
                             <label for="date_from" class="form-label">
@@ -179,7 +176,6 @@
                     <span class="section-icon">
                         <i class="fas fa-receipt"></i>
                     </span>
-
                     <div>
                         <h5 class="mb-1 fw-bold">Listado de ventas</h5>
                         <small class="text-muted">
@@ -231,7 +227,7 @@
 
                                 <td class="text-start">
                                     <div class="fw-semibold">
-                                        {{ $sale->client->full_name ?? 'Sin cliente' }}
+                                        {{ $sale->client->full_name ?? 'Consumidor Final' }}
                                     </div>
 
                                     @if ($sale->client && $sale->client->dni)
@@ -324,31 +320,12 @@
             {{-- Paginación --}}
             @if ($sales->hasPages())
                 <div class="results-footer">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                        <small class="text-muted">
-                            Mostrando
-                            <strong>{{ $sales->firstItem() }}</strong>
-                            a
-                            <strong>{{ $sales->lastItem() }}</strong>
-                            de
-                            <strong>{{ $sales->total() }}</strong>
-                            ventas
-                        </small>
-
-                        <div>
-                            {{ $sales->links() }}
-                        </div>
+                    <div class="justify-content-between align-items-center gap-3">
+                        {{ $sales->withQueryString()->links() }}
                     </div>
                 </div>
-            @elseif ($sales->total() > 0)
-                <div class="results-footer">
-                    <small class="text-muted">
-                        Se encontraron {{ $sales->total() }} venta(s).
-                    </small>
-                </div>
-            @endif
         </div>
-
+        @endif
     </div>
 
     <script>
