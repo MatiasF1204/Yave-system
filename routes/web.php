@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentMethodController;
@@ -10,47 +10,43 @@ use App\Http\Controllers\DailyControlController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleReportController;
-use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\StockReportController;
 use Illuminate\Support\Facades\Route;
 
 
-// ==========================================
-// Inicio de sesión
-// ==========================================
+// ======================================================
+// 1. INICIO
+// ======================================================
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 
-// ==========================================
-// REDIRECCIÓN AL DASHBOARD SEGÚN EL ROL
-// ==========================================
+// ======================================================
+// 2. REDIRECCIÓN SEGÚN EL ROL
+// ======================================================
 
 Route::get('/dashboard', function () {
+
     $user = auth()->user();
 
-    if (!$user) {
-        return redirect()->route('login');
-    }
-
-    // Redirige al dashboard segun el rol
-    if ($user->role && $user->role->name === 'Administrador') {
+    if ($user->role?->name === 'Administrador') {
         return redirect()->route('admin.dashboard');
     }
 
-    if ($user->role && $user->role->name === 'Vendedor') {
-        return redirect()->route('seller.dashboard');
+    if ($user->role?->name === 'Vendedor') {
+        return redirect()->route('sales.create');
     }
 
-    return redirect()->route('login');
+    abort(403, 'No tenés permisos para acceder al sistema.');
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-// ==========================================
-// RUTAS EXCLUSIVAS DEL ADMINISTRADOR
-// ==========================================
+// ======================================================
+// 3. RUTAS EXCLUSIVAS DEL ADMINISTRADOR
+// ======================================================
 
 Route::middleware(['auth', 'verified', 'role:Administrador'])
     ->prefix('admin')
@@ -61,20 +57,18 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
 
-        // Reporte de ventas
+        // Reportes
         Route::prefix('reports')->name('reports.')->group(function () {
+
             Route::get('/sales', [SaleReportController::class, 'index'])
                 ->name('sales');
-        });
 
-        // Reporte de stock
-        Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/stock', [StockReportController::class, 'index'])
                 ->name('stock');
         });
 
 
-        // Gestión de Usuarios
+        // Gestión de usuarios
         Route::get('/users', [UserController::class, 'index'])
             ->name('users.index');
 
@@ -97,10 +91,7 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
             ->name('users.activate');
 
 
-        // Gestión de Categorías
-        Route::get('/categories', [CategoryController::class, 'index'])
-            ->name('categories.index');
-
+        // Gestión de categorías
         Route::get('/categories/create', [CategoryController::class, 'create'])
             ->name('categories.create');
 
@@ -120,10 +111,27 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
             ->name('categories.activate');
 
 
-        // Gestión de Métodos de Pago
-        Route::get('/payment-methods', [PaymentMethodController::class, 'index'])
-            ->name('payment_methods.index');
+        // Gestión de productos
+        Route::get('/products/create', [ProductController::class, 'create'])
+            ->name('products.create');
 
+        Route::post('/products', [ProductController::class, 'store'])
+            ->name('products.store');
+
+        Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
+            ->name('products.edit');
+
+        Route::put('/products/{product}', [ProductController::class, 'update'])
+            ->name('products.update');
+
+        Route::put('/products/{product}/deactivate', [ProductController::class, 'deactivate'])
+            ->name('products.deactivate');
+
+        Route::put('/products/{product}/activate', [ProductController::class, 'activate'])
+            ->name('products.activate');
+
+
+        // Gestión de medios de pago
         Route::get('/payment-methods/create', [PaymentMethodController::class, 'create'])
             ->name('payment_methods.create');
 
@@ -142,68 +150,34 @@ Route::middleware(['auth', 'verified', 'role:Administrador'])
         Route::put('/payment-methods/{payment_method}/activate', [PaymentMethodController::class, 'activate'])
             ->name('payment_methods.activate');
 
+        // Gestión de clientes: desactivar y activar
+        Route::put('/clients/{client}/deactivate', [ClientController::class, 'deactivate'])
+            ->name('clients.deactivate');
 
-        // Gestión de Productos
-        Route::get('/products/create', [ProductController::class, 'create'])
-            ->name('products.create');
+        Route::put('/clients/{client}/activate', [ClientController::class, 'activate'])
+            ->name('clients.activate');
 
-        Route::post('/products', [ProductController::class, 'store'])
-            ->name('products.store');
 
-        Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
-            ->name('products.edit');
+        // Perfil
+        Route::get('/profile', [ProfileController::class, 'edit'])
+            ->name('profile.edit');
 
-        Route::put('/products/{product}', [ProductController::class, 'update'])
-            ->name('products.update');
+        Route::patch('/profile', [ProfileController::class, 'update'])
+            ->name('profile.update');
 
-        Route::put('/products/{product}/deactivate', [ProductController::class, 'deactivate'])
-            ->name('products.deactivate');
-
-        Route::put('/products/{product}/activate', [ProductController::class, 'activate'])
-            ->name('products.activate');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])
+            ->name('profile.destroy');
     });
 
 
-// ==========================================
-// RUTAS ADMINISTRADOR Y VENDEDOR
-// ==========================================
+// ======================================================
+// 4. RUTAS COMPARTIDAS: ADMINISTRADOR Y VENDEDOR
+// ======================================================
 
 Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
     ->group(function () {
 
-        // Ver los productos
-        Route::get('/products', [ProductController::class, 'index'])
-            ->name('products.index');
-
-        Route::get('/products/{product}', [ProductController::class, 'show'])
-            ->name('products.show');
-
-        // Control diarío de caja
-        Route::get('/control-diario', [DailyControlController::class, 'index'])
-            ->name('daily-control.index');
-    });
-
-
-// ==========================================
-// RUTAS DE VENDEDOR
-// ==========================================
-
-Route::middleware(['auth', 'verified', 'role:Vendedor'])
-    ->prefix('seller')
-    ->name('seller.')
-    ->group(function () {
-
-        Route::get('/dashboard', [SellerDashboardController::class, 'index'])
-            ->name('dashboard');
-    });
-
-// ==========================================
-// CLIENTES - ADMINISTRADOR Y VENDEDOR
-// ==========================================
-
-Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
-    ->group(function () {
-
+        // CLIENTES
         Route::get('/clients', [ClientController::class, 'index'])
             ->name('clients.index');
 
@@ -222,63 +196,61 @@ Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
         Route::put('/clients/{client}', [ClientController::class, 'update'])
             ->name('clients.update');
 
-        Route::put('/clients/{client}/deactivate', [ClientController::class, 'deactivate'])
-            ->name('clients.deactivate');
 
-        Route::put('/clients/{client}/activate', [ClientController::class, 'activate'])
-            ->name('clients.activate');
-    });
+        // CATEGORÍAS
+        Route::get('/categories', [CategoryController::class, 'index'])
+            ->name('categories.index');
 
 
-// ==========================================
-// VENTAS - ADMINISTRADOR Y VENDEDOR
-// ==========================================
+        // PRODUCTOS
+        Route::get('/products', [ProductController::class, 'index'])
+            ->name('products.index');
 
-Route::middleware(['auth', 'verified', 'role:Administrador,Vendedor'])
-    ->prefix('sales')
-    ->name('sales.')
-    ->controller(SaleController::class)
-    ->group(function () {
+        Route::get('/products/{product}', [ProductController::class, 'show'])
+            ->name('products.show');
 
-        // Listado de ventas
-        Route::get('/', 'index')
-            ->name('index');
 
-        // Formulario para registrar una venta
-        Route::get('/create', 'create')
-            ->name('create');
+        // MEDIOS DE PAGO
+        Route::get('/payment-methods', [PaymentMethodController::class, 'index'])
+            ->name('payment_methods.index');
 
-        // Guardar una venta
-        Route::post('/', 'store')
-            ->name('store');
 
-        // Ver el detalle de una venta
-        Route::get('/{sale}', 'show')
-            ->whereNumber('sale')
-            ->name('show');
+        // INTRODUCCIÓN DE TICKET Y GESTIÓN DE VENTAS
+        Route::prefix('sales')
+            ->name('sales.')
+            ->controller(SaleController::class)
+            ->group(function () {
 
-        // Anular una venta: únicamente el administrador
-        Route::put('/{sale}/cancel', 'cancel')
-            ->whereNumber('sale')
-            ->middleware('role:Administrador')
-            ->name('cancel');
-    });
+                // Listado de ventas
+                Route::get('/', 'index')
+                    ->name('index');
 
-// ==========================================
-// PERFIL - SOLO ADMINISTRADOR
-// ==========================================
+                // Formulario para registrar una venta
+                Route::get('/create', 'create')
+                    ->name('create');
 
-Route::middleware(['auth', 'verified', 'role:Administrador'])
-    ->group(function () {
+                // Guardar una venta
+                Route::post('/', 'store')
+                    ->name('store');
 
-        Route::get('/profile', [ProfileController::class, 'edit'])
-            ->name('profile.edit');
+                // Detalle de una venta
+                Route::get('/{sale}', 'show')
+                    ->whereNumber('sale')
+                    ->name('show');
 
-        Route::patch('/profile', [ProfileController::class, 'update'])
-            ->name('profile.update');
+                // Solicitar anulación de una venta
+                // La autorización del administrador se valida
+                // dentro del método cancel del controlador
+                Route::put('/{sale}/cancel', 'cancel')
+                    ->whereNumber('sale')
+                    ->name('cancel');
+            });
 
-        Route::delete('/profile', [ProfileController::class, 'destroy'])
-            ->name('profile.destroy');
+
+        // CONTROL DIARIO DE CAJA
+        Route::get('/control-diario', [DailyControlController::class, 'index'])
+            ->name('daily-control.index');
+
     });
 
 

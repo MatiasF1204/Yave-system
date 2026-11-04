@@ -71,8 +71,9 @@
 </head>
 
 <body class="font-sans antialiased">
+
     {{-- Sidebar --}}
-    @include('seller.components.sidebar')
+    @include('sidebar')
 
     {{-- Contenedor principal --}}
     <div class="content">

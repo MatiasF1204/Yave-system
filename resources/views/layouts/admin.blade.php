@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    {{-- font-awesome --}}
+    {{-- Font-awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Bootstrap -->
@@ -25,11 +25,13 @@
 </head>
 
 <body class="font-sans antialiased">
+
     {{-- Sidebar --}}
-    @include('admin.components.sidebar')
+    @include('sidebar')
 
     {{-- Contenedor principal --}}
     <div class="content">
+        
         {{-- Topbar --}}
         <div class="topbar">
             <h1 class="text-xl font-semibold text-gray-700">Panel de Administrador</h1>
@@ -48,6 +50,7 @@
         <main class="mt-4">
             @yield('content')
         </main>
+        
     </div>
 
     {{-- Bootstrap --}}

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
@@ -24,7 +24,7 @@ class DashboardController extends Controller
             ->whereDate('sale_date', $today)
             ->sum('total');
 
-        // Ganancia estimada del día
+        // Ganancia estimada del dia
         $estimatedProfitToday = (float) DB::table('sale_details as sd')
             ->join('sales as s', 's.sale_id', '=', 'sd.sale_id')
             ->where('s.status', 'active')

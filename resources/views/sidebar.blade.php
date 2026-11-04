@@ -49,8 +49,8 @@
         </a>
 
         {{-- Categorías --}}
-        <a href="{{ route('admin.categories.index') }}"
-            class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+        <a href="{{ route('categories.index') }}"
+            class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
             <i class="bi bi-grid-fill"></i>
             <span>Gestión de Categorías</span>
         </a>
@@ -63,8 +63,8 @@
         </a>
 
         {{-- Medios de pago --}}
-        <a href="{{ route('admin.payment_methods.index') }}"
-            class="{{ request()->routeIs('admin.payment_methods.*') ? 'active' : '' }}">
+        <a href="{{ route('payment_methods.index') }}"
+            class="{{ request()->routeIs('payment_methods.*') ? 'active' : '' }}">
             <i class="bi bi-credit-card-fill"></i>
             <span>Medios de Pago</span>
         </a>
@@ -118,7 +118,7 @@
         <span class="sidebar-section-title">Cuenta</span>
 
         {{-- Perfil --}}
-        <a href="{{ route('profile.edit') }}" class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+        <a href="{{ route('admin.profile.edit') }}" class="{{ request()->routeIs('admin.profile.edit') ? 'active' : '' }}">
             <i class="bi bi-person-circle"></i>
             <span>Mi Perfil</span>
         </a>

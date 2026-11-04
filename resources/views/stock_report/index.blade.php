@@ -264,9 +264,10 @@
                                         </div>
 
                                         <div class="stock-product-info">
-                                            <span class="stock-product-name">
+                                            <a href="{{ route('products.show', $product->id) }}"
+                                                class="stock-product-name">
                                                 {{ $product->name }}
-                                            </span>
+                                            </a>
 
                                             <span class="stock-product-id">
                                                 Código #{{ $product->id }}
