@@ -60,7 +60,7 @@ class PaymentMethodController extends Controller
             ]);
 
             return redirect()
-                ->route('admin.payment_methods.index')
+                ->route('payment_methods.index')
                 ->with(
                     'success',
                     'El método de pago ya había sido registrado anteriormente. Se reactivó correctamente y se conservó todo su historial.'
@@ -74,7 +74,7 @@ class PaymentMethodController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.payment_methods.index')
+            ->route('payment_methods.index')
             ->with(
                 'success',
                 'Método de pago registrado correctamente.'
@@ -94,7 +94,7 @@ class PaymentMethodController extends Controller
 
         $payment_method->update($validated);
 
-        return redirect()->route('admin.payment_methods.index')
+        return redirect()->route('payment_methods.index')
             ->with('success', 'Método de pago actualizado correctamente.');
     }
 

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(auth()->user()->role?->name === 'Administrador' ? 'layouts.admin' : 'layouts.seller')
 
 @section('content')
     <div class="container-fluid categories-page p-0">
@@ -10,13 +10,15 @@
                 <h2>Categorías</h2>
                 <p>Organizá y administrá las categorías de tus productos.</p>
             </div>
-
-            <div class="heading-action">
-                <a href="{{ route('admin.categories.create') }}" class="btn-register">
-                    <i class="bi bi-folder-plus"></i>
-                    <span>Registrar categoría</span>
-                </a>
-            </div>
+            {{-- Solo el admin crea categorías --}}
+            @if (auth()->user()->role?->name === 'Administrador')
+                <div class="heading-action">
+                    <a href="{{ route('admin.categories.create') }}" class="btn-register">
+                        <i class="bi bi-folder-plus"></i>
+                        <span>Registrar categoría</span>
+                    </a>
+                </div>
+            @endif
         </div>
 
         {{-- Mensaje de éxito --}}
@@ -40,7 +42,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('admin.categories.index') }}" method="GET">
+            <form action="{{ route('categories.index') }}" method="GET">
                 <div class="search-form">
                     <div class="search-input-wrapper">
                         <i class="bi bi-search search-input-icon"></i>
@@ -55,7 +57,7 @@
                     </button>
 
                     @if (request('search'))
-                        <a href="{{ route('admin.categories.index') }}" class="btn-clear-search">
+                        <a href="{{ route('categories.index') }}" class="btn-clear-search">
                             <i class="bi bi-x-circle"></i>
                             <span>Limpiar</span>
                         </a>
@@ -149,7 +151,7 @@
                                             <h6>No se encontraron categorías</h6>
                                             <p>No hay categorías que coincidan con "{{ request('search') }}".</p>
 
-                                            <a href="{{ route('admin.categories.index') }}" class="btn-empty-action">
+                                            <a href="{{ route('categories.index') }}" class="btn-empty-action">
                                                 <i class="bi bi-arrow-counterclockwise"></i>
                                                 Ver todas las categorías
                                             </a>

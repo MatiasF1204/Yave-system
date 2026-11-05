@@ -122,7 +122,6 @@ class ClientController extends Controller
             ->with('success', 'Cliente registrado correctamente.');
     }
 
-
     // Formulario para editar cliente (solo admin)
     public function edit(Client $client)
     {

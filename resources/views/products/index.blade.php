@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(auth()->user()->role?->name === 'Administrador' ? 'layouts.admin' : 'layouts.seller')
 
 @section('content')
     <div class="container-fluid products-page p-0">
@@ -152,7 +152,7 @@
                                 {{-- Stock --}}
                                 <td>
                                     @if ($product->stock <= 0)
-                                        <span class="stock-badge stock-empty">
+                                        <span class="stock-badge stock-empty" style="width: 100px;">
                                             <span class="stock-dot"></span>
                                             Sin stock
                                         </span>
@@ -241,9 +241,6 @@
 
         </div>
     </div>
-
-    {{-- SweetAlert2 --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         // Desactivar producto

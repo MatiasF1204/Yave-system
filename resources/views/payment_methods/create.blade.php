@@ -10,8 +10,7 @@
                     <i class="bi bi-exclamation-triangle-fill mt-1"></i>
                     <div>
                         <strong>No se pudo registrar el método de pago.</strong>
-                        <p class="mb-1">Revisá los siguientes errores:</p>
-                        <ul class="mb-0 ps-3">
+                        <ul class="mb-0 ps-3" style="list-style: circle">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -83,7 +82,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="{{ route('admin.payment_methods.index') }}" class="btn-cancel-custom">
+                        <a href="{{ route('payment_methods.index') }}" class="btn-cancel-custom">
                             <i class="bi bi-arrow-left"></i>
                             Cancelar
                         </a>

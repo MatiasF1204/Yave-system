@@ -11,7 +11,7 @@
                 <div>
                     <strong>Revisá los datos ingresados.</strong>
 
-                    <ul class="validation-errors mb-0 mt-2">
+                    <ul class="validation-errors mb-0 mt-2" style="list-style: circle">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -84,7 +84,7 @@
 
                 {{-- Acciones --}}
                 <div class="form-actions">
-                    <a href="{{ route('admin.categories.index') }}" class="btn-cancel">
+                    <a href="{{ route('categories.index') }}" class="btn-cancel">
                         <i class="bi bi-arrow-left"></i>
                         Cancelar
                     </a>

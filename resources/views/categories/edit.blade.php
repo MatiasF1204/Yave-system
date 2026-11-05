@@ -11,7 +11,7 @@
                 <div>
                     <strong>Revisá los datos ingresados.</strong>
 
-                    <ul class="validation-errors mb-0 mt-2">
+                    <ul class="validation-errors mb-0 mt-2" style="list-style: circle">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -34,7 +34,7 @@
                     <small>Modificá el nombre de la categoría seleccionada.</small>
                 </div>
 
-                <span class="category-reference">
+                <span class="category-reference" style="width: 65px; height: 40px;">
                     <i class="bi bi-tag-fill me-1"></i>
                     ID: {{ $category->id }}
                 </span>
@@ -90,7 +90,7 @@
 
                 {{-- Acciones --}}
                 <div class="form-actions">
-                    <a href="{{ route('admin.categories.index') }}" class="btn-cancel">
+                    <a href="{{ route('categories.index') }}" class="btn-cancel">
                         <i class="bi bi-arrow-left"></i>
                         Cancelar
                     </a>

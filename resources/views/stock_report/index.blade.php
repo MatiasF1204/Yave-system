@@ -165,24 +165,6 @@
                     </select>
                 </div>
 
-                <div class="stock-filter">
-                    <label for="product-status">Estado del producto</label>
-
-                    <select name="status" id="product-status">
-                        <option value="active" @selected($productStatus === 'active')>
-                            Activos
-                        </option>
-
-                        <option value="inactive" @selected($productStatus === 'inactive')>
-                            Inactivos
-                        </option>
-
-                        <option value="all" @selected($productStatus === 'all')>
-                            Todos los estados
-                        </option>
-                    </select>
-                </div>
-
                 <div class="stock-filter__actions">
                     <button type="submit" class="stock-btn stock-btn--primary">
                         <i class="bi bi-search"></i>

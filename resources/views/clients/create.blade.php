@@ -1,4 +1,8 @@
-@extends('layouts.admin')
+@extends(
+    auth()->user()->role?->name === 'Administrador'
+        ? 'layouts.admin'
+        : 'layouts.seller'
+)
 
 @section('content')
     <div class="container-fluid client-create-page p-0">
@@ -10,7 +14,7 @@
                 <div>
                     <strong>Revisá los datos ingresados.</strong>
 
-                    <ul class="validation-errors mb-0 mt-2">
+                    <ul class="validation-errors mb-0 mt-2" style="list-style: circle">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach

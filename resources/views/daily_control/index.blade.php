@@ -1,5 +1,4 @@
-
-@extends('layouts.admin')
+@extends(auth()->user()->role?->name === 'Administrador' ? 'layouts.admin' : 'layouts.seller')
 
 @section('content')
 @php

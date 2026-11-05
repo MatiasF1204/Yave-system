@@ -9,7 +9,7 @@
 
                 <div>
                     <strong>Revisá los datos ingresados.</strong>
-                    <ul class="mb-0 mt-2">
+                    <ul class="mb-0 mt-2" style="list-style: circle">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach

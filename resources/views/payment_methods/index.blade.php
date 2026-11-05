@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(auth()->user()->role?->name === 'Administrador' ? 'layouts.admin' : 'layouts.seller')
 
 @section('content')
     <div class="container-fluid payment-methods-page p-0">
@@ -19,10 +19,13 @@
                     </p>
                 </div>
 
-                <a href="{{ route('admin.payment_methods.create') }}" class="btn-register">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    Registrar método de pago
-                </a>
+                {{-- Solo el admin crea un medio de pago --}}
+                @if (auth()->user()->role?->name === 'Administrador')
+                    <a href="{{ route('admin.payment_methods.create') }}" class="btn-register">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Registrar método de pago
+                    </a>
+                @endif
             </div>
         </div>
 
@@ -52,7 +55,7 @@
                     </div>
                 </div>
 
-                <span class="payment-count">
+                <span class="payment-count" style="width: 120px; height: 40px;">
                     <i class="bi bi-credit-card me-1"></i>
                     {{ method_exists($paymentMethods, 'total') ? $paymentMethods->total() : $paymentMethods->count() }}
                     método(s)
@@ -61,7 +64,7 @@
 
             {{-- Buscador --}}
             <div class="search-section">
-                <form action="{{ route('admin.payment_methods.index') }}" method="GET" class="payment-search">
+                <form action="{{ route('payment_methods.index') }}" method="GET" class="payment-search">
 
                     <div class="search-input-wrapper">
                         <i class="bi bi-search search-icon"></i>
@@ -71,7 +74,7 @@
                             aria-label="Buscar métodos de pago">
 
                         @if (request('search'))
-                            <a href="{{ route('admin.payment_methods.index') }}" class="clear-search"
+                            <a href="{{ route('payment_methods.index') }}" class="clear-search"
                                 title="Limpiar búsqueda" aria-label="Limpiar búsqueda">
                                 <i class="bi bi-x-circle"></i>
                             </a>
@@ -99,7 +102,9 @@
                     <thead>
                         <tr>
                             <th>Método de pago</th>
-                            <th class="text-center actions-column">Acciones</th>
+                            @if (auth()->user()->role?->name === 'Administrador')
+                                <th class="text-center actions-column">Acciones</th>
+                            @endif
                         </tr>
                     </thead>
 
@@ -127,22 +132,24 @@
                                 </td>
 
                                 {{-- Acciones --}}
-                                <td>
-                                    <div class="payment-actions">
-                                        <a href="{{ route('admin.payment_methods.edit', $pm->id) }}"
-                                            class="btn-action btn-edit" title="Editar método de pago">
-                                            <i class="bi bi-pencil-square"></i>
-                                            <span>Editar</span>
-                                        </a>
+                                {{-- Solo el admin elimina y edita un medio de pago --}}
+                                @if (auth()->user()->role?->name === 'Administrador')
+                                    <td>
+                                        <div class="payment-actions">
+                                            <a href="{{ route('admin.payment_methods.edit', $pm->id) }}"
+                                                class="btn-action btn-edit" title="Editar método de pago">
+                                                <i class="bi bi-pencil-square"></i>
+                                                <span>Editar</span>
+                                            </a>
 
-                                        <button type="button" onclick="deletePM({{ $pm->id }})"
-                                            class="btn-action btn-deactivate" title="Desactivar método de pago">
-                                            <i class="bi bi-trash3"></i>
-                                            <span>Eliminar</span>
-                                        </button>
-                                    </div>
-                                </td>
-
+                                            <button type="button" onclick="deletePM({{ $pm->id }})"
+                                                class="btn-action btn-deactivate" title="Desactivar método de pago">
+                                                <i class="bi bi-trash3"></i>
+                                                <span>Eliminar</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
@@ -159,7 +166,7 @@
                                                 <strong>{{ request('search') }}</strong>.
                                             </p>
 
-                                            <a href="{{ route('admin.payment_methods.index') }}" class="btn-empty">
+                                            <a href="{{ route('payment_methods.index') }}" class="btn-empty">
                                                 <i class="bi bi-arrow-counterclockwise me-1"></i>
                                                 Ver todos los métodos
                                             </a>
@@ -210,9 +217,6 @@
 
         </div>
     </div>
-
-    {{-- SweetAlert2 --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         // Desactivar método de pago

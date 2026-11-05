@@ -1,8 +1,6 @@
 @extends(auth()->user()->role?->name === 'Administrador' ? 'layouts.admin' : 'layouts.seller')
 
 @section('content')
-
-@section('content')
     <style>
         .client-name {
             font-weight: 600;
@@ -33,7 +31,6 @@
     </style>
 
     <div class="container-fluid clients-page p-0">
-
         {{-- Encabezado --}}
         <div class="clients-heading mb-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -42,14 +39,11 @@
                         <i class="bi bi-people-fill me-1"></i>
                         GESTIÓN DE CLIENTES
                     </div>
-
                     <h1 class="h3 fw-bold mb-2">Clientes</h1>
-
                     <p class="mb-0">
                         Consultá y administrá los datos de tus clientes registrados.
                     </p>
                 </div>
-
                 <a href="{{ route('clients.create') }}" class="btn btn-register">
                     <i class="bi bi-person-plus-fill me-1"></i>
                     Registrar cliente
@@ -73,7 +67,6 @@
                     <span class="section-icon">
                         <i class="bi bi-search"></i>
                     </span>
-
                     <div>
                         <h5 class="mb-1 fw-bold">Buscar clientes</h5>
                         <small class="text-muted">
@@ -86,20 +79,17 @@
             <div class="card-body p-4">
                 <form action="{{ route('clients.index') }}" method="GET">
                     <label for="search" class="search-label">DNI del cliente</label>
-
                     <div class="row g-2">
                         <div class="col-12 col-md">
                             <input type="number" min="0" name="search" id="search" class="form-control"
                                 placeholder="Ej.: 35123456" value="{{ request('search') }}">
                         </div>
-
                         <div class="col-6 col-md-auto">
                             <button type="submit" class="btn btn-search w-100 h-100 px-4">
                                 <i class="bi bi-search me-1"></i>
                                 Buscar
                             </button>
                         </div>
-
                         <div class="col-6 col-md-auto">
                             <a href="{{ route('clients.index') }}"
                                 class="btn btn-outline-secondary btn-clear w-100 h-100 d-flex align-items-center justify-content-center px-3">
@@ -119,7 +109,6 @@
                     <span class="section-icon">
                         <i class="bi bi-person-lines-fill"></i>
                     </span>
-
                     <div>
                         <h5 class="mb-1 fw-bold">Listado de clientes</h5>
                         <small class="text-muted">
@@ -127,8 +116,7 @@
                         </small>
                     </div>
                 </div>
-
-                <span class="badge rounded-pill px-3 py-2" style="background:#142b4a;color:#fff">
+                <span class="badge rounded-pill px-3 py-2" style="background:#142b4a;color:#fff; min-width: 13%; height:40px;">
                     {{ $clients->total() }} cliente(s)
                 </span>
             </div>
@@ -140,7 +128,6 @@
                             <th>Nombre completo</th>
                             <th>DNI</th>
                             <th>Teléfono</th>
-
                             @if (auth()->user()->role->name === 'Administrador')
                                 <th class="text-center">Acciones</th>
                             @endif
@@ -162,11 +149,9 @@
                                         </a>
                                     </div>
                                 </td>
-
                                 <td>
                                     <span class="client-dni">{{ $client->dni }}</span>
                                 </td>
-
                                 <td>
                                     @if ($client->phone)
                                         <i class="bi bi-telephone-fill text-secondary me-1"></i>
@@ -175,7 +160,6 @@
                                         <span class="text-muted">No registrado</span>
                                     @endif
                                 </td>
-
                                 @if (auth()->user()->role->name === 'Administrador')
                                     <td class="text-center">
                                         <div class="d-flex flex-wrap justify-content-center gap-2">
@@ -183,7 +167,7 @@
                                                 <i class="bi bi-pencil-square me-1"></i>
                                                 Editar
                                             </a>
-
+                                            {{-- Solo el admin elimina clientes --}}
                                             @if (auth()->user()->role?->name === 'Administrador')
                                                 <button type="button" onclick="deleteClient({{ $client->id }})"
                                                     class="btn btn-sm btn-delete">
@@ -236,9 +220,6 @@
         </div>
     </div>
 
-    {{-- SweetAlert2 --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
         function deleteClient(id) {
             Swal.fire({
@@ -256,7 +237,7 @@
                     return;
                 }
 
-                fetch(`/clients/${id}/deactivate`, {
+                fetch(`admin/clients/${id}/deactivate`, {
                         method: 'PUT',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',

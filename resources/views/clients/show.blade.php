@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(auth()->user()->role?->name === 'Administrador' ? 'layouts.admin' : 'layouts.seller')
 
 @section('content')
     <div class="container-fluid clients-page p-0">
@@ -272,8 +272,8 @@
 
                 @if (auth()->user()->role->name === 'Administrador')
                     <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-register"
-                        style="align-content: center>
-                <i class="bi bi-pencil-square me-1"></i>
+                        style="align-content: center;">
+                        <i class="bi bi-pencil-square me-1"></i>
                         Editar cliente
                     </a>
                 @endif

@@ -1,5 +1,4 @@
-
-@extends('layouts.admin')
+@extends(auth()->user()->role?->name === 'Administrador' ? 'layouts.admin' : 'layouts.seller')
 
 @section('content')
 
@@ -24,8 +23,7 @@
                 </a>
 
                 @if (auth()->user()->role->name === 'Administrador')
-                    <a href="{{ route('admin.products.edit', $product->id) }}"
-                       class="btn btn-primary">
+                    <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-primary">
                         <i class="bi bi-pencil-square me-1"></i>
                         Editar producto
                     </a>
@@ -42,11 +40,8 @@
                     {{-- IMAGEN --}}
                     <div class="col-12 col-md-4 col-lg-3 text-center">
                         @if ($product->image)
-                            <img
-                                src="{{ asset('storage/' . $product->image) }}"
-                                alt="{{ $product->name }}"
-                                class="product-image img-fluid rounded"
-                            >
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                class="product-image img-fluid rounded">
                         @else
                             <div class="product-image-placeholder rounded mx-auto">
                                 <i class="bi bi-image"></i>
@@ -136,86 +131,88 @@
         </div>
 
         {{-- COSTOS Y RENTABILIDAD --}}
-        <div class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white py-3">
-                <h5 class="fw-bold mb-0">
-                    <i class="bi bi-calculator me-2 text-primary"></i>
-                    Costos y rentabilidad
-                </h5>
-            </div>
+        @if (auth()->user()->role->name === 'Administrador')
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-calculator me-2 text-primary"></i>
+                        Costos y rentabilidad
+                    </h5>
+                </div>
 
-            <div class="card-body p-4">
-                <div class="row g-3">
+                <div class="card-body p-4">
+                    <div class="row g-3">
 
-                    {{-- COSTO DEL PRODUCTO --}}
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="info-box h-100">
-                            <span class="info-label">Costo del producto</span>
-                            <h4 class="fw-bold mb-0">
-                                ${{ number_format($product->cost, 2, ',', '.') }}
-                            </h4>
+                        {{-- COSTO DEL PRODUCTO --}}
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="info-box h-100">
+                                <span class="info-label">Costo del producto</span>
+                                <h4 class="fw-bold mb-0">
+                                    ${{ number_format($product->cost, 2, ',', '.') }}
+                                </h4>
+                            </div>
                         </div>
+
+                        {{-- COSTO DEL TRANSPORTE --}}
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="info-box h-100">
+                                <span class="info-label">Costo del transporte</span>
+                                <h4 class="fw-bold mb-0">
+                                    ${{ number_format($product->transport_cost, 2, ',', '.') }}
+                                </h4>
+                            </div>
+                        </div>
+
+                        {{-- COSTO TOTAL --}}
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="info-box h-100">
+                                <span class="info-label">Costo total</span>
+                                <h4 class="fw-bold mb-0">
+                                    ${{ number_format($product->total_cost, 2, ',', '.') }}
+                                </h4>
+                                <small class="text-muted">
+                                    Producto + transporte
+                                </small>
+                            </div>
+                        </div>
+
+                        {{-- GANANCIA --}}
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="info-box h-100">
+                                <span class="info-label">Ganancia por unidad</span>
+                                <h4 class="fw-bold mb-0 {{ $product->profit >= 0 ? 'text-success' : 'text-danger' }}">
+                                    ${{ number_format($product->profit, 2, ',', '.') }}
+                                </h4>
+                                <small class="text-muted">
+                                    Precio de venta − costo total
+                                </small>
+                            </div>
+                        </div>
+
                     </div>
 
-                    {{-- COSTO DEL TRANSPORTE --}}
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="info-box h-100">
-                            <span class="info-label">Costo del transporte</span>
-                            <h4 class="fw-bold mb-0">
-                                ${{ number_format($product->transport_cost, 2, ',', '.') }}
-                            </h4>
-                        </div>
-                    </div>
+                    {{-- MARGEN DE GANANCIA --}}
+                    <hr class="my-4">
 
-                    {{-- COSTO TOTAL --}}
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="info-box h-100">
-                            <span class="info-label">Costo total</span>
-                            <h4 class="fw-bold mb-0">
-                                ${{ number_format($product->total_cost, 2, ',', '.') }}
-                            </h4>
-                            <small class="text-muted">
-                                Producto + transporte
-                            </small>
+                    <div class="row align-items-center g-2">
+                        <div class="col-12 col-md-6">
+                            <span class="text-muted">Margen de ganancia sobre el precio de venta</span>
                         </div>
-                    </div>
 
-                    {{-- GANANCIA --}}
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="info-box h-100">
-                            <span class="info-label">Ganancia por unidad</span>
-                            <h4 class="fw-bold mb-0 {{ $product->profit >= 0 ? 'text-success' : 'text-danger' }}">
-                                ${{ number_format($product->profit, 2, ',', '.') }}
-                            </h4>
-                            <small class="text-muted">
-                                Precio de venta − costo total
-                            </small>
+                        <div class="col-12 col-md-6 text-md-end">
+                            @if ($product->price > 0)
+                                <span class="fs-5 fw-bold">
+                                    {{ number_format(($product->profit / $product->price) * 100, 2, ',', '.') }}%
+                                </span>
+                            @else
+                                <span class="text-muted">No disponible</span>
+                            @endif
                         </div>
                     </div>
 
                 </div>
-
-                {{-- MARGEN DE GANANCIA --}}
-                <hr class="my-4">
-
-                <div class="row align-items-center g-2">
-                    <div class="col-12 col-md-6">
-                        <span class="text-muted">Margen de ganancia sobre el precio de venta</span>
-                    </div>
-
-                    <div class="col-12 col-md-6 text-md-end">
-                        @if ($product->price > 0)
-                            <span class="fs-5 fw-bold">
-                                {{ number_format(($product->profit / $product->price) * 100, 2, ',', '.') }}%
-                            </span>
-                        @else
-                            <span class="text-muted">No disponible</span>
-                        @endif
-                    </div>
-                </div>
-
             </div>
-        </div>
+        @endif
 
         {{-- INVENTARIO --}}
         <div class="card border-0 shadow-sm mb-4">

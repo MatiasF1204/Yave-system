@@ -66,7 +66,7 @@ class CategoryController extends Controller
             ]);
 
             return redirect()
-                ->route('admin.categories.index')
+                ->route('categories.index')
                 ->with(
                     'success',
                     'La categoría ya había sido registrada anteriormente. Se reactivó correctamente y se conservó todo su historial.'
@@ -80,7 +80,7 @@ class CategoryController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.categories.index')
+            ->route('categories.index')
             ->with('success', 'Categoría registrada correctamente.');
     }
 
@@ -103,7 +103,7 @@ class CategoryController extends Controller
         $category->update($validated);
 
         // Redirige a la vista con mensaje de éxito
-        return redirect()->route('admin.categories.index')->with('success', 'Categoría actualizada correctamente.');
+        return redirect()->route('categories.index')->with('success', 'Categoría actualizada correctamente.');
     }
 
 

@@ -1,4 +1,8 @@
-@extends('layouts.admin')
+@extends(
+    auth()->user()->role?->name === 'Administrador'
+        ? 'layouts.admin'
+        : 'layouts.seller'
+)
 
 @section('content')
     <div class="container-fluid client-edit-page p-0">
@@ -11,7 +15,7 @@
                 <div>
                     <strong>Revisá los datos ingresados.</strong>
 
-                    <ul class="validation-errors mb-0 mt-2">
+                    <ul class="validation-errors mb-0 mt-2" style="list-style: circle">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -34,7 +38,7 @@
                     <small>Actualizá los datos del cliente seleccionado.</small>
                 </div>
 
-                <span class="client-reference">
+                <span class="client-reference" style="width: 65px; height: 40px;">
                     <i class="bi bi-person-badge me-1"></i>
                     ID: {{ $client->id }}
                 </span>

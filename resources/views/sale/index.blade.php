@@ -274,7 +274,7 @@
                                             <i class="fas fa-eye me-1"></i>
                                             Ver
                                         </a>
-
+                                        {{-- Solo el admin puede anular una venta --}}
                                         @if (auth()->user()->role->name === 'Administrador' && $sale->status === 'active')
                                             <button type="button" class="btn btn-sm btn-cancel-sale"
                                                 data-url="{{ route('sales.cancel', $sale) }}"

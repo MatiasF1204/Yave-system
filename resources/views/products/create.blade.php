@@ -11,7 +11,7 @@
                 <div>
                     <strong>Revisá los datos ingresados.</strong>
 
-                    <ul class="mb-0 mt-2">
+                    <ul class="mb-0 mt-2" style="list-style: circle">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" novalidate>
                 @csrf
 
                 <div class="form-body">
@@ -366,10 +366,6 @@
     </div>
 
     <style>
-        /* =========================================
-               ESTILOS EXCLUSIVOS DE REGISTRO DE PRODUCTOS
-               ========================================= */
-
         .product-create-page {
             --navy: #142b4a;
             --navy-light: #1d416b;

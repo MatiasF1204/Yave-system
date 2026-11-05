@@ -32,8 +32,8 @@
                     <small>Actualizá la información del usuario seleccionado.</small>
                 </div>
 
-                <span class="user-reference">
-                    <i class="bi bi-person-badge me-1"></i>
+                <span class="user-reference" style="width: 65px; height: 40px;">
+                    <i class="bi bi-person-badge"></i>
                     ID: {{ $user->id }}
                 </span>
             </div>

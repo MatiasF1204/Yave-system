@@ -10,7 +10,7 @@
                     <i class="bi bi-exclamation-triangle-fill"></i>
                     <div>
                         <strong>No se pudieron guardar los cambios.</strong>
-                        <ul class="mb-0 mt-1">
+                        <ul class="mb-0 mt-1" style="list-style: circle">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -83,7 +83,7 @@
 
                     {{-- Acciones --}}
                     <div class="payment-method-edit-actions">
-                        <a href="{{ route('admin.payment_methods.index') }}"
+                        <a href="{{ route('payment_methods.index') }}"
                             class="payment-method-edit-btn payment-method-edit-btn-secondary">
                             <i class="bi bi-arrow-left"></i>
                             Cancelar

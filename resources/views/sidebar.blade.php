@@ -26,21 +26,27 @@
 
     <nav class="sidebar-nav">
 
-        <span class="sidebar-section-title">Principal</span>
+        @if (auth()->user()->role?->name === 'Administrador')
+            <span class="sidebar-section-title">Principal</span>
 
-        {{-- Dashboard --}}
-        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-            <i class="bi bi-speedometer2"></i>
-            <span>Dashboard</span>
-        </a>
+            {{-- Dashboard --}}
+            <a href="{{ route('admin.dashboard') }}"
+                class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+        @endif
 
         <span class="sidebar-section-title">Administración</span>
 
-        {{-- Usuarios --}}
-        <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-            <i class="bi bi-people-fill"></i>
-            <span>Gestión de Usuarios</span>
-        </a>
+        @if (auth()->user()->role?->name === 'Administrador')
+            {{-- Usuarios --}}
+            <a href="{{ route('admin.users.index') }}"
+                class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <i class="bi bi-people-fill"></i>
+                <span>Gestión de Usuarios</span>
+            </a>
+        @endif
 
         {{-- Clientes --}}
         <a href="{{ route('clients.index') }}" class="{{ request()->routeIs('clients.*') ? 'active' : '' }}">
@@ -49,8 +55,7 @@
         </a>
 
         {{-- Categorías --}}
-        <a href="{{ route('categories.index') }}"
-            class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+        <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
             <i class="bi bi-grid-fill"></i>
             <span>Gestión de Categorías</span>
         </a>
@@ -113,15 +118,18 @@
             </a>
         @endif
 
+        @if (auth()->user()->role?->name === 'Administrador')
         <div class="sidebar-divider"></div>
 
-        <span class="sidebar-section-title">Cuenta</span>
+            <span class="sidebar-section-title">Cuenta</span>
 
-        {{-- Perfil --}}
-        <a href="{{ route('admin.profile.edit') }}" class="{{ request()->routeIs('admin.profile.edit') ? 'active' : '' }}">
-            <i class="bi bi-person-circle"></i>
-            <span>Mi Perfil</span>
-        </a>
+            {{-- Perfil --}}
+            <a href="{{ route('admin.profile.edit') }}"
+                class="{{ request()->routeIs('admin.profile.edit') ? 'active' : '' }}">
+                <i class="bi bi-person-circle"></i>
+                <span>Mi Perfil</span>
+            </a>
+        @endif
 
     </nav>
 </div>

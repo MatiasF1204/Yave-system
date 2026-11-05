@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     // LISTADO DE PRODUCTOS
-
     public function index(Request $request)
     {
         $query = Product::with('categories')
@@ -33,7 +32,6 @@ class ProductController extends Controller
 
         return view('products.index', compact('products'));
     }
-
 
     // MOSTRAR DETALLE DEL PRODUCTO
     public function show(Product $product)
@@ -155,10 +153,6 @@ class ProductController extends Controller
                 );
         }
 
-        // ==========================================
-        // CREAR PRODUCTO NUEVO
-        // ==========================================
-
         // CALCULAR COSTOS
         $totalCost = $validated['cost'] + $validated['transport_cost'];
         $profit = $validated['price'] - $totalCost;
@@ -196,7 +190,6 @@ class ProductController extends Controller
             ->route('products.index')
             ->with('success', 'Producto registrado correctamente.');
     }
-
 
     // FORMULARIO PARA EDITAR PRODUCTO
     public function edit(Product $product)
@@ -264,7 +257,6 @@ class ProductController extends Controller
             'image.mimes' => 'La imagen debe ser JPG, JPEG, PNG o WEBP.',
             'image.max' => 'La imagen no puede superar los 2 MB.',
         ]);
-
 
         // CALCULAR COSTOS
         $totalCost = $validated['cost'] + $validated['transport_cost'];
